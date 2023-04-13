@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+
 import logo from '../../assets/argentBankLogo.png'
 import '../../utils/style/_header.scss'
 
@@ -25,10 +26,10 @@ function Header() {
             src={logo}
             alt="ArgentBank Logo"
           />
-          <h1 class="sr-only">Argent Bank</h1>
+          <h1 className="sr-only">Argent Bank</h1>
         </Link>
-        <Link class="main-nav-item" to="/login">
-          <i class="fa fa-user-circle"></i>
+        <Link className="main-nav-item" to="/login">
+          <i className="fa fa-user-circle"></i>
           Sign In
         </Link>
       </nav>

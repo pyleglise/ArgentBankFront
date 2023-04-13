@@ -1,7 +1,7 @@
 import '../../utils/style/_footer.scss'
 
 /**
- * Component that displays the header (logo and main top navbar menu)\
+ * Component that displays the Footer \
  * No props
  *
  * @namespace
@@ -9,14 +9,14 @@ import '../../utils/style/_footer.scss'
  * @author  Pierre-Yves Léglise <pleglise@pm.me>
  * @example
  * return{
- *  <Header />
+ *  <Footer />
  * }
- * @returns {JSX.Element}   A JSX element containing the Header (logo and main top navbar menu)
+ * @returns {JSX.Element}   A JSX element containing the Footer
  */
 function Footer() {
   return (
-    <footer class="footer">
-      <p class="footer-text">Copyright 2020 Argent Bank</p>
+    <footer className="footer">
+      <p className="footer-text">Copyright 2020 Argent Bank</p>
     </footer>
   )
 }

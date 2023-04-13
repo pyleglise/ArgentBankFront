@@ -18,21 +18,25 @@ import Home from './pages/Home'
 import Login from './pages/Login'
 import Profile from './pages/Profile'
 import Error from './components/error'
+import { UserProvider } from './utils/context'
 
 const root = ReactDOM.createRoot(document.getElementById('root'))
+// console.log(UserProvider)
 root.render(
   <React.StrictMode>
     <Router>
-      <Header />
-      <Routes>
-        <Route exact path="/" element={<Home />} />
-        <Route exact path="/login" element={<Login />} />
+      <UserProvider>
+        <Header />
+        <Routes>
+          <Route exact path="/" element={<Home />} />
+          <Route exact path="/login" element={<Login />} />
 
-        <Route exact path="/profile" element={<Profile />} />
+          <Route exact path="/profile" element={<Profile />} />
 
-        <Route path="*" element={<Error />} />
-      </Routes>
-      <Footer />
+          <Route path="*" element={<Error />} />
+        </Routes>
+        <Footer />
+      </UserProvider>
     </Router>
   </React.StrictMode>
 )
