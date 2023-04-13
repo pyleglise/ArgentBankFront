@@ -1,0 +1,28 @@
+@import 'colors';
+.error {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 351.8px);
+  .error-num {
+    font-size: 100px;
+    font-weight: 700;
+    margin-top: 45px;
+    margin-bottom: 10px;
+  }
+
+  .error-txt {
+    text-align: center;
+    font-size: 36px;
+    font-weight: 500;
+    margin-bottom: 75px;
+    align-items: center;
+    margin-right: 20px;
+    margin-left: 20px;
+  }
+  a:link,
+  :visited {
+    color: $primary-color;
+  }
+}
