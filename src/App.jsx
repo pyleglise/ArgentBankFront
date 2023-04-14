@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import Home from './pages/Home'
 import Login from './pages/Login'
 import Profile from './pages/Profile'
@@ -8,12 +8,13 @@ import Header from './components/header'
 import Footer from './components/footer'
 import Logout from './features/logout'
 import RequireAuth from './features/auth/services/RequireAuth'
-// import Unauthorized from './components/unauthorized'
+import Unauthorized from './components/unauthorized'
 
 function App() {
   return (
-    <>
+    <Router>
       <Header />
+
       <Routes>
         <Route path="/" element={<Layout />}>
           {/* Public Routes */}
@@ -36,13 +37,14 @@ function App() {
           </Route>
 
           {/* Fallback routes */}
-          {/* <Route path="/unauthorized" element={<Unauthorized />} /> */}
+          <Route path="/unauthorized" element={<Unauthorized />} />
           {/* All other url : Error Route */}
           <Route path="*" element={<Error />} />
         </Route>
       </Routes>
+
       <Footer />
-    </>
+    </Router>
   )
 }
 export default App
