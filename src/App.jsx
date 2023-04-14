@@ -8,7 +8,7 @@ import Header from './components/header'
 import Footer from './components/footer'
 import Logout from './features/logout'
 import RequireAuth from './features/auth/services/RequireAuth'
-import Unauthorized from './components/unauthorized'
+// import Unauthorized from './components/unauthorized'
 
 function App() {
   return (
@@ -31,7 +31,7 @@ function App() {
             }
           /> */}
 
-          <Route element={<RequireAuth redirectTo="/login" />}>
+          <Route element={<RequireAuth />}>
             <Route path="/profile" element={<Profile />} />
           </Route>
 
