@@ -1,7 +1,10 @@
-import { useState, useContext } from 'react'
-import axios from 'axios'
-import { UserContext } from '../../utils/context'
+import { useState, useEffect, useRef } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+// import axios from 'axios'
+// import { UserContext } from '../../utils/context'
 import { useNavigate } from 'react-router-dom'
+import { login } from '../../features/auth/slices/auth'
+import { clearMessage } from '../../features/auth/slices/message'
 import '../../utils/style/_login.scss'
 /**
  * Component that displays the Login page\
@@ -18,68 +21,151 @@ import '../../utils/style/_login.scss'
  *
  */
 const Login = () => {
+  let content = ''
+  const navigate = useNavigate()
+  const [count, setCount] = useState(3)
+  const userRef = useRef()
+  // const errRef = useRef()
+  const [loading, setLoading] = useState(false)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [isDataLoading, setDataLoading] = useState(false)
-  const [msg, setMsg] = useState('')
-  const { login, logout } = useContext(UserContext)
-  const history = useNavigate()
-  const Auth = async (e) => {
+  // const [errMsg, setErrMsg] = useState('')
+  const { isLoggedIn } = useSelector((state) => state.auth)
+  const { message } = useSelector((state) => state.message)
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    dispatch(clearMessage())
+  }, [dispatch])
+
+  useEffect(() => {
+    if (userRef.current) userRef.current.focus()
+  }, [])
+
+  // useEffect(() => {
+  //   setErrMsg('')
+  // }, [email, password])
+
+  const initialValues = {
+    email: 'email',
+    password: '**********',
+  }
+  const handleEmail = (e) => setEmail(e.target.value)
+  const handlePassword = (e) => setPassword(e.target.value)
+  const handleLogin = (e) => {
     e.preventDefault()
-    try {
-      setDataLoading(true)
-      await axios.post('http://localhost:3001/api/v1/user/login', {
-        email: email,
-        password: password,
+    setLoading(true)
+    dispatch(login({ email, password }))
+      .unwrap()
+      .then(() => {
+        setLoading(false)
+        navigate('/profile')
       })
-      // console.log('identifiant_utilisateur='+identifiant_utilisateur)
-      login(email)
-      // console.log('user='+user.name);
-      setDataLoading(false)
-      history('/profile')
-    } catch (error) {
-      if (error.response) {
-        setMsg(error.response.data.msg)
-        logout()
-        setDataLoading(false)
-      }
+      .catch(() => {
+        setLoading(false)
+        // message.current.focus()
+      })
+  }
+  console.log('isLoggedIn=' + isLoggedIn)
+  useEffect(() => {
+    if (isLoggedIn) {
+      const interval = setInterval(() => {
+        setCount((seconds) => seconds - 1)
+      }, 1000)
+      count === 0 && navigate('/profile')
+      return () => clearInterval(interval)
     }
+  }, [isLoggedIn, navigate, count])
+
+  if (isLoggedIn) {
+    return (
+      <div className="temp-div ">
+        <p>
+          User already signed in.
+          <br />
+          No authentification required. Redirection in {count} sec.
+        </p>
+      </div>
+    )
   }
 
-  return (
+  // useEffect(() => {
+  //   const retour = () => {
+  //     if (isLoggedIn) {
+  //       setTimeout(() => {
+  //         navigate('/profile')
+  //       }, 5000)
+  //       return (
+  //         <div className="temp-div ">
+  //           <p>
+  //             User already signed in.
+  //             <br />
+  //             No authentification required. Redirection in 5 sec.
+  //           </p>
+  //         </div>
+  //       )
+  //     }
+  //   }
+  //   return retour
+  // }, [isLoggedIn, navigate])
+
+  content = loading ? (
+    <div className="temp-div ">
+      <h1>Loading...</h1>
+    </div>
+  ) : (
     <main className="main bg-dark">
       <section className="sign-in-content">
         <i className="fa fa-user-circle sign-in-icon"></i>
         <h1>Sign In</h1>
-        <form onSubmit={Auth}>
+        <form onSubmit={handleLogin}>
           <div className="input-wrapper">
-            <label for="username">Username</label>
+            <label htmlFor="email">Email</label>
             <input
               type="text"
-              placeholder="Username"
-              id="username"
+              placeholder={initialValues.email}
+              id="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={handleEmail}
+              ref={userRef}
+              autoComplete="off"
+              required
             />
           </div>
           <div className="input-wrapper">
-            <label for="password">Password</label>
+            <label htmlFor="password">Password</label>
             <input
               type="password"
-              placeholder="*******"
+              placeholder={initialValues.password}
               id="password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={handlePassword}
+              autoComplete="off"
+              required
             />
           </div>
           <div className="input-remember">
             <input type="checkbox" id="remember-me" />
-            <label for="remember-me">Remember me</label>
+            <label htmlFor="remember-me">Remember me</label>
           </div>
-          <button className="sign-in-button">Sign In</button>
+          <button className="sign-in-button" disabled={loading}>
+            {loading && (
+              <span className="spinner-border spinner-border-sm">Loading</span>
+            )}
+            <span>Sign In</span>
+          </button>
         </form>
+        {message && (
+          <div className="form-group">
+            <div className="alert alert-danger" role="alert">
+              {message}
+            </div>
+          </div>
+        )}
       </section>
     </main>
   )
+  return content
+  // }
 }
 export default Login

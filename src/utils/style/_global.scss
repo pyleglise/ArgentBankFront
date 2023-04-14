@@ -1,5 +1,5 @@
 @import 'colors';
-@import 'https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css';
+// @import 'https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.1/css/fontawesome.min.css';
 html {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -8,7 +8,7 @@ html {
   color: #2c3e50;
 }
 
-body {
+body #root {
   margin: 0;
   display: flex;
   flex-direction: column;
@@ -20,7 +20,7 @@ body {
 }
 
 .temp-div {
-  font-size: 48px;
+  font-size: 28px;
   font-weight: 900;
   text-align: center;
   vertical-align: center;
@@ -30,4 +30,8 @@ body {
 }
 .home-div {
   margin-top: 18%;
+}
+button {
+  font-size: 18px;
+  padding: 10px 20px;
 }

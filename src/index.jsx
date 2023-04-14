@@ -11,32 +11,28 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { Route, Routes, BrowserRouter as Router } from 'react-router-dom'
+import { Provider } from 'react-redux'
+import store from './utils/store'
 import './utils/style/_global.scss'
-import Header from './components/header'
-import Footer from './components/footer'
-import Home from './pages/Home'
-import Login from './pages/Login'
-import Profile from './pages/Profile'
-import Error from './components/error'
-import { UserProvider } from './utils/context'
+
+import App from './App'
+
+// import { UserProvider } from './utils/context'
 
 const root = ReactDOM.createRoot(document.getElementById('root'))
 // console.log(UserProvider)
 root.render(
   <React.StrictMode>
-    <Router>
-      <UserProvider>
-        <Header />
+    <Provider store={store}>
+      <Router>
+        {/* <UserProvider> */}
+
         <Routes>
-          <Route exact path="/" element={<Home />} />
-          <Route exact path="/login" element={<Login />} />
-
-          <Route exact path="/profile" element={<Profile />} />
-
-          <Route path="*" element={<Error />} />
+          <Route path="/*" element={<App />} />
         </Routes>
-        <Footer />
-      </UserProvider>
-    </Router>
+
+        {/* </UserProvider> */}
+      </Router>
+    </Provider>
   </React.StrictMode>
 )
