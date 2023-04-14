@@ -1,33 +1,34 @@
 import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { logout } from '../auth/slices/auth'
+import { logingOut } from '../auth/services/authSlice'
 import '../../utils/style/_global.scss'
 
 const Logout = () => {
   const [count, setCount] = useState(3)
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const { isLoggedIn } = useSelector((state) => state.auth)
-  console.log('Logged in : ' + isLoggedIn)
+  const { isAuth } = useSelector((state) => state.login)
+  console.log('Logged in : ' + isAuth)
 
   const signOut = () => {
-    if (isLoggedIn) {
-      dispatch(logout())
+    if (isAuth) {
+      dispatch(logingOut())
+      localStorage.removeItem('token')
     }
   }
 
   useEffect(() => {
-    if (!isLoggedIn) {
+    if (!isAuth) {
       const interval = setInterval(() => {
         setCount((seconds) => seconds - 1)
       }, 1000)
       count === 0 && navigate('/')
       return () => clearInterval(interval)
     }
-  }, [isLoggedIn, navigate, count])
+  }, [isAuth, navigate, count])
 
-  if (!isLoggedIn) {
+  if (!isAuth) {
     return (
       <div className="temp-div ">
         <p>

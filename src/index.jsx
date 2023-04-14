@@ -19,6 +19,7 @@ import App from './App'
 // import { UserProvider } from './utils/context'
 
 const root = ReactDOM.createRoot(document.getElementById('root'))
+// const store = configureStore()
 // console.log(UserProvider)
 root.render(
   <Provider store={store}>

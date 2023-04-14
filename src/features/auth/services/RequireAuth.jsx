@@ -1,19 +1,20 @@
 import { useLocation, Navigate, Outlet } from 'react-router-dom'
-import { useSelector } from 'react-redux'
-import { selectCurrentToken } from '../slices/auth'
+import { useSelector, useDispatch } from 'react-redux'
+import { logingSuccess } from '../../auth/services/authSlice'
+
+// import { selectCurrentToken } from '../slices/auth'
 
 const RequireAuth = () => {
-  const token = useSelector(selectCurrentToken)
   const location = useLocation()
-  console.log('RequireAuth started')
-  console.log(token)
+  const dispatch = useDispatch()
+  const token = localStorage.getItem('token')
+  // keeps you logged in while refreshing
+  if (token) {
+    dispatch(logingSuccess(token))
+  }
+  const { isAuth } = useSelector((state) => state.login)
 
-  // if (!token) {
-  //   return <Navigate to={redirectTo} state={{ from: location }} replace />
-  // }
-  // return children ? children : <Outlet />
-
-  return token ? (
+  return isAuth ? (
     <Outlet />
   ) : (
     <Navigate to="/unauthorized" state={{ from: location }} replace />

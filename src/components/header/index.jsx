@@ -17,7 +17,8 @@ import '../../utils/style/_header.scss'
  * @returns {JSX.Element}   A JSX element containing the Header (logo and main top navbar menu)
  */
 function Header() {
-  const { isLoggedIn } = useSelector((state) => state.auth)
+  const { isAuth } = useSelector((state) => state.login)
+  // const isLoggedIn = true
   return (
     <header>
       <nav className="main-nav">
@@ -29,9 +30,9 @@ function Header() {
           />
           <h1 className="sr-only">Argent Bank</h1>
         </Link>
-        {isLoggedIn ? (
+        {isAuth ? (
           <Link className="main-nav-item" to="/logout">
-            <i class="fa fa-sign-out"></i>
+            <i className="fa fa-sign-out"></i>
             Sign Out
           </Link>
         ) : (

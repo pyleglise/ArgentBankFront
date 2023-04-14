@@ -1,15 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit'
-import authReducer from '../features/auth/slices/auth'
-import messageReducer from '../features/auth/slices/message'
-
-const reducer = {
-  auth: authReducer,
-  message: messageReducer,
-}
+import authSlice from '../features/auth/services/authSlice'
+// import profileReducer from '../src/pages/profilePage/profileSlice'
 
 const store = configureStore({
-  reducer: reducer,
-  devTools: true,
+  reducer: {
+    login: authSlice,
+    // profile: profileReducer,
+  },
 })
 
 export default store
