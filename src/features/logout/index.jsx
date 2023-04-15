@@ -1,20 +1,27 @@
 import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { logingOut } from '../auth/services/authSlice'
+import { logingOut, logingPending } from '../auth/authSlice'
+import { userPending, userQuit } from '../profile/userSlice'
 import '../../utils/style/_global.scss'
 
 const Logout = () => {
   const [count, setCount] = useState(3)
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const { isAuth } = useSelector((state) => state.login)
-  console.log('Logged in : ' + isAuth)
+
+  const isAuth = useSelector((state) => state.auth.isAuth)
+  // console.log('Logged in : ' + isAuth)
 
   const signOut = () => {
     if (isAuth) {
+      dispatch(logingPending())
+      dispatch(userPending())
       dispatch(logingOut())
+      dispatch(userQuit())
       localStorage.removeItem('token')
+      localStorage.removeItem('firstName')
+      localStorage.removeItem('lastName')
     }
   }
 
@@ -50,7 +57,7 @@ const Logout = () => {
       </Link>
       <Link className="main-nav-item" to={-1}>
         <button>
-          <i class="fa-solid fa-arrow-left" /> No ! Go back
+          <i className="fa-solid fa-arrow-left" /> No ! Go back
         </button>
       </Link>
     </div>

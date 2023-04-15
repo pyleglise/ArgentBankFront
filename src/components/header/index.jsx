@@ -1,5 +1,9 @@
 import { Link } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+// import { useSelector } from 'react-redux'
+import { shallowEqual, useSelector } from 'react-redux'
+import { RefreshAuthState } from '../../features/auth/RefreshAuthState'
+import { RefreshUserState } from '../../features/profile/RefreshUserState'
+
 import logo from '../../assets/argentBankLogo.png'
 import '../../utils/style/_header.scss'
 
@@ -17,8 +21,11 @@ import '../../utils/style/_header.scss'
  * @returns {JSX.Element}   A JSX element containing the Header (logo and main top navbar menu)
  */
 function Header() {
-  const { isAuth } = useSelector((state) => state.login)
-  // const isLoggedIn = true
+  RefreshAuthState()
+  RefreshUserState()
+  const isAuth = useSelector((state) => state.auth.isAuth, shallowEqual)
+  const firstName = useSelector((state) => state.user.firstName, shallowEqual)
+
   return (
     <header>
       <nav className="main-nav">
@@ -31,10 +38,16 @@ function Header() {
           <h1 className="sr-only">Argent Bank</h1>
         </Link>
         {isAuth ? (
-          <Link className="main-nav-item" to="/logout">
-            <i className="fa fa-sign-out"></i>
-            Sign Out
-          </Link>
+          <div>
+            <Link className="main-nav-item" to="/profile">
+              <i className="fa fa-user-circle"></i>
+              {' ' + firstName + ' '}
+            </Link>
+            <Link className="main-nav-item" to="/logout">
+              <i className="fa fa-sign-out"></i>
+              Sign Out
+            </Link>
+          </div>
         ) : (
           <Link className="main-nav-item" to="/login">
             <i className="fa fa-user-circle"></i>

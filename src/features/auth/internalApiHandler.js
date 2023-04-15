@@ -9,15 +9,16 @@ const URL_LOGIN = 'http://localhost:3001/api/v1/user'
  * @returns {Promise<any>} Promise with user datas
  */
 
-export async function userLogin(credientials) {
+export async function getData(credientials, apiFunction) {
+  const token = localStorage.getItem('token')
+  if (token) axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
+  else delete axios.defaults.headers.common['Authorization']
   return new Promise(async (resolve, reject) => {
     try {
-      const res = await axios.post(URL_LOGIN + '/login', credientials)
-      const token = res.data.body.token
-      if (token)
-        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
-      else delete axios.defaults.headers.common['Authorization']
-      resolve(res.data)
+      const res = await axios.post(URL_LOGIN + '/' + apiFunction, credientials)
+      // token = res.data.body.token
+
+      resolve(res.data.body)
     } catch (error) {
       reject(error)
     }

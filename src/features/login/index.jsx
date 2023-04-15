@@ -1,13 +1,14 @@
-import { useState, useEffect, useRef } from 'react'
-import { userLogin } from '../auth/internalApiHandler'
-import { useSelector, useDispatch } from 'react-redux'
+import { useState, useEffect } from 'react'
+import { getData } from '../auth/internalApiHandler'
+import { shallowEqual, useSelector, useDispatch } from 'react-redux'
 import {
   logingPending,
   logingSuccess,
   logingError,
   logingRemember,
-} from '../auth/services/authSlice'
+} from '../auth/authSlice'
 import { useNavigate } from 'react-router-dom'
+import { RefreshAuthState } from '../auth/RefreshAuthState'
 import '../../utils/style/_login.scss'
 /**
  * Component that displays the Login page\
@@ -27,14 +28,10 @@ const Login = () => {
   const dispatch = useDispatch()
   let navigate = useNavigate()
   let content = ''
-  const token = localStorage.getItem('token')
-
-  // keeps you logged in while refreshing
-  if (token) {
-    dispatch(logingSuccess(token))
-  }
+  RefreshAuthState()
   const { isAuth, isLoading, error, isRemember } = useSelector(
-    (state) => state.login
+    (state) => state.auth,
+    shallowEqual
   )
 
   const initialValues = {
@@ -48,7 +45,7 @@ const Login = () => {
   })
 
   const [count, setCount] = useState(3)
-  const userRef = useRef()
+  // const userRef = useRef()
 
   // Handles the direct access thru URL
   useEffect(() => {
@@ -61,10 +58,6 @@ const Login = () => {
     }
   }, [isAuth, navigate, count])
 
-  // useEffect(() => {
-  //   if (userRef.current) userRef.current.focus()
-  // }, [])
-
   function handelChange({ currentTarget }) {
     const { value, name } = currentTarget
     if (name) {
@@ -76,25 +69,25 @@ const Login = () => {
   }
 
   const handleLogin = async (e) => {
+    e.preventDefault()
     dispatch(logingPending())
     try {
-      const isAuth = await userLogin(credientials)
+      const isAuth = await getData(credientials, 'login')
 
       if (isRemember) {
-        localStorage.setItem('token', isAuth.body.token)
+        localStorage.setItem('token', isAuth.token)
       } else {
         localStorage.removeItem('token')
       }
 
-      dispatch(logingSuccess(isAuth.body.token))
+      dispatch(logingSuccess(isAuth.token))
+
       navigate('/profile')
     } catch (error) {
       console.log(error)
       dispatch(logingError(error.response.data.message))
     }
   }
-
-  console.log('isLoggedIn=' + isAuth)
 
   if (isAuth) {
     return (
@@ -107,26 +100,6 @@ const Login = () => {
       </div>
     )
   }
-
-  // useEffect(() => {
-  //   const retour = () => {
-  //     if (isLoggedIn) {
-  //       setTimeout(() => {
-  //         navigate('/profile')
-  //       }, 5000)
-  //       return (
-  //         <div className="temp-div ">
-  //           <p>
-  //             User already signed in.
-  //             <br />
-  //             No authentification required. Redirection in 5 sec.
-  //           </p>
-  //         </div>
-  //       )
-  //     }
-  //   }
-  //   return retour
-  // }, [isLoggedIn, navigate])
 
   content = isLoading ? (
     <div className="temp-div ">
@@ -154,7 +127,6 @@ const Login = () => {
               id="email"
               name="email"
               onChange={handelChange}
-              ref={userRef}
               autoComplete="off"
               required
             />

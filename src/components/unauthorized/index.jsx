@@ -8,7 +8,7 @@ const Unauthorized = () => {
       <p>User unauthorized</p>
       <Link className="main-nav-item" to={-1}>
         <button>
-          <i class="fa-solid fa-arrow-left" /> Go back
+          <i className="fa-solid fa-arrow-left" /> Go back
         </button>
       </Link>
     </div>

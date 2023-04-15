@@ -29,7 +29,9 @@ const authSlice = createSlice({
       state.isRemember = action.payload
     },
     logingOut: (state) => {
+      state.isLoading = false
       state.isAuth = false
+      state.token = null
     },
   },
 })
@@ -42,3 +44,4 @@ export const {
   logingRemember,
 } = actions
 export default reducer
+export const selectCurrentToken = (state) => state.auth.token

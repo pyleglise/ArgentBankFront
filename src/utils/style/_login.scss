@@ -1,7 +1,5 @@
 @import 'colors';
-.bg-dark {
-  background-color: $background-dark;
-}
+@import 'common';
 .sign-in-button {
   display: block;
   width: 100%;
