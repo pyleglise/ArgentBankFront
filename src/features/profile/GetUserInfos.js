@@ -1,26 +1,18 @@
-import axios from 'axios'
 import { getData } from '../auth/internalApiHandler'
-import { useDispatch, useSelector } from 'react-redux'
-import {
-  userPending,
-  userFirstName,
-  userLastName,
-  userError,
-} from './userSlice'
+import { shallowEqual, useDispatch, useSelector } from 'react-redux'
+import { userError, userFullName, userPending } from './userSlice'
+import { useEffect } from 'react'
 
 export const GetUserInfos = async () => {
   const dispatch = useDispatch()
-  const { isRemember } = useSelector((state) => state.auth)
-  const token = localStorage.getItem('token')
-  if (token) {
-    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
-  }
+  const { isRemember } = useSelector((state) => state.auth, shallowEqual)
 
-  dispatch(userPending())
+  useEffect(() => {
+    dispatch(userPending())
+  }, [dispatch])
   try {
     const profile = await getData({}, 'profile')
-    dispatch(userFirstName(profile.firstName))
-    dispatch(userLastName(profile.lastName))
+
     if (isRemember) {
       localStorage.setItem('firstName', profile.firstName)
       localStorage.setItem('lastName', profile.lastName)
@@ -28,6 +20,8 @@ export const GetUserInfos = async () => {
       localStorage.removeItem('firstName')
       localStorage.removeItem('lastName')
     }
+    dispatch(userFullName(profile))
+    // return {}
   } catch (error) {
     console.log(error)
     dispatch(userError(error.response.data.message))

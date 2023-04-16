@@ -16,8 +16,6 @@ export async function getData(credientials, apiFunction) {
   return new Promise(async (resolve, reject) => {
     try {
       const res = await axios.post(URL_LOGIN + '/' + apiFunction, credientials)
-      // token = res.data.body.token
-
       resolve(res.data.body)
     } catch (error) {
       reject(error)

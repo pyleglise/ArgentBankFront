@@ -37,7 +37,7 @@ const Logout = () => {
 
   if (!isAuth) {
     return (
-      <div className="temp-div ">
+      <div className="temp-div home-div">
         <p>
           User already logged out.
           <br />
@@ -48,15 +48,15 @@ const Logout = () => {
   }
 
   return (
-    <div className="temp-div ">
+    <div className="temp-div home-div">
       <p>Are you sure you want to sign out ?</p>
       <Link className="main-nav-item" onClick={() => signOut()} to="/">
-        <button>
+        <button className="edit-button">
           <i className="fa-solid fa-arrow-right-from-bracket" /> Sign Out
         </button>
       </Link>
       <Link className="main-nav-item" to={-1}>
-        <button>
+        <button className="edit-button">
           <i className="fa-solid fa-arrow-left" /> No ! Go back
         </button>
       </Link>

@@ -4,7 +4,7 @@ const initialState = {
   isLoading: false,
   firstName: '',
   lastName: '',
-  error: '',
+  error: null,
 }
 
 const userSlice = createSlice({
@@ -17,12 +17,18 @@ const userSlice = createSlice({
     userFirstName: (state, action) => {
       state.isLoading = false
       state.firstName = action.payload
-      state.error = ''
+      state.error = null
     },
     userLastName: (state, action) => {
       state.isLoading = false
       state.lastName = action.payload
-      state.error = ''
+      state.error = null
+    },
+    userFullName: (state, action) => {
+      state.isLoading = false
+      state.lastName = action.payload.lastName
+      state.firstName = action.payload.firstName
+      state.error = null
     },
     userError: (state, action) => {
       state.isLoading = false
@@ -32,11 +38,17 @@ const userSlice = createSlice({
       state.isLoading = false
       state.firstName = ''
       state.lastName = ''
-      state.error = ''
+      state.error = null
     },
   },
 })
 const { actions, reducer } = userSlice
-export const { userPending, userFirstName, userLastName, userError, userQuit } =
-  actions
+export const {
+  userPending,
+  userFirstName,
+  userLastName,
+  userFullName,
+  userError,
+  userQuit,
+} = actions
 export default reducer

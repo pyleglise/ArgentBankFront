@@ -1,11 +1,10 @@
 import { Link } from 'react-router-dom'
-// import { useSelector } from 'react-redux'
-import { shallowEqual, useSelector } from 'react-redux'
-import { RefreshAuthState } from '../../features/auth/RefreshAuthState'
-import { RefreshUserState } from '../../features/profile/RefreshUserState'
-
+import { useEffect } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 import logo from '../../assets/argentBankLogo.png'
 import '../../utils/style/_header.scss'
+import { userFirstName } from '../../features/profile/userSlice'
+import { logingOut, logingSuccess } from '../../features/auth/authSlice'
 
 /**
  * Component that displays the header (logo and main top navbar menu)\
@@ -21,10 +20,22 @@ import '../../utils/style/_header.scss'
  * @returns {JSX.Element}   A JSX element containing the Header (logo and main top navbar menu)
  */
 function Header() {
-  RefreshAuthState()
-  RefreshUserState()
-  const isAuth = useSelector((state) => state.auth.isAuth, shallowEqual)
-  const firstName = useSelector((state) => state.user.firstName, shallowEqual)
+  const dispatch = useDispatch()
+  const isAuth = useSelector((state) => state.auth.isAuth)
+  const localStorageFirstName = localStorage.getItem('firstName')
+  const localStorageToken = localStorage.getItem('token')
+  useEffect(() => {
+    if (localStorageToken) {
+      const localStorageFirstName = localStorage.getItem('firstName')
+      if (localStorageFirstName) {
+        dispatch(userFirstName(localStorageFirstName))
+        dispatch(logingSuccess(localStorageToken))
+      }
+    } else dispatch(logingOut)
+  }, [dispatch, localStorageFirstName, localStorageToken])
+
+  const { firstName } = useSelector((state) => state.user)
+  // GetUserInfos()
 
   return (
     <header>

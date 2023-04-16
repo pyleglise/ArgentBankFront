@@ -1,11 +1,7 @@
 import '../../utils/style/_profile.scss'
-import { shallowEqual, useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
-import { GetUserInfos } from '../../features/profile/GetUserInfos'
 import UserAccounts from '../../components/userAccounts'
-
-// import { userSlice } from '../../features/profile/userSlice'
+import { GetUserInfos } from '../../features/profile/GetUserInfos'
 
 /**
  * Component that displays the Profile page\
@@ -22,42 +18,16 @@ import UserAccounts from '../../components/userAccounts'
  *
  */
 const Profile = () => {
-  const [count, setCount] = useState(5)
-  const isAuth = useSelector((state) => state.auth.isAuth, shallowEqual)
-
   GetUserInfos()
-
-  // const user = useSelector((state) => state.user)
-  // console.log('user:')
-  // console.log(user)
-  const navigate = useNavigate()
-
-  const firstName = useSelector((state) => state.user.firstName, shallowEqual)
-  const lastName = useSelector((state) => state.user.lastName, shallowEqual)
-
-  useEffect(() => {
-    if (!isAuth) {
-      const interval = setInterval(() => {
-        setCount((seconds) => seconds - 1)
-      }, 1000)
-      count === 0 && navigate('/login')
-      return () => clearInterval(interval)
-    }
-  }, [isAuth, navigate, count])
-
-  if (!isAuth) {
-    return (
-      <div className="temp-div ">
-        <p>
-          User not signed in.
-          <br />
-          Authentification required. Redirection in {count} sec.
-        </p>
-      </div>
-    )
-  }
-
-  return (
+  let content = ''
+  const firstName = useSelector((state) => state.user.firstName)
+  const lastName = useSelector((state) => state.user.lastName)
+  const isLoading = useSelector((state) => state.user.isLoading)
+  content = isLoading ? (
+    <div className="temp-div ">
+      <h1>Loading...</h1>
+    </div>
+  ) : (
     <main className="main bg-dark">
       {true ? (
         <div className="header">
@@ -102,5 +72,6 @@ const Profile = () => {
       <UserAccounts />
     </main>
   )
+  return content
 }
 export default Profile

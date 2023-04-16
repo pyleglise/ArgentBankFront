@@ -44,4 +44,3 @@ export const {
   logingRemember,
 } = actions
 export default reducer
-export const selectCurrentToken = (state) => state.auth.token

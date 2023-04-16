@@ -2,6 +2,7 @@ import '../../utils/style/_home.scss'
 import iconChat from '../../assets/icon-chat.png'
 import iconMonney from '../../assets/icon-money.png'
 import iconSecurity from '../../assets/icon-security.png'
+// import { RefreshAuthState } from '../../features/auth/RefreshAuthState'
 
 /**
  * Component that displays the Home page\

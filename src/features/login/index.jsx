@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { getData } from '../auth/internalApiHandler'
-import { shallowEqual, useSelector, useDispatch } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import {
   logingPending,
   logingSuccess,
@@ -10,6 +10,7 @@ import {
 import { useNavigate } from 'react-router-dom'
 import { RefreshAuthState } from '../auth/RefreshAuthState'
 import '../../utils/style/_login.scss'
+
 /**
  * Component that displays the Login page\
  * No props
@@ -28,11 +29,14 @@ const Login = () => {
   const dispatch = useDispatch()
   let navigate = useNavigate()
   let content = ''
-  RefreshAuthState()
-  const { isAuth, isLoading, error, isRemember } = useSelector(
-    (state) => state.auth,
-    shallowEqual
+
+  const { isAuth, isLoading, error, isRemember, token } = useSelector(
+    (state) => state.auth
   )
+
+  if (isAuth && isRemember && token !== localStorage.getItem('token')) {
+    RefreshAuthState()
+  }
 
   const initialValues = {
     email: 'email',
@@ -91,7 +95,7 @@ const Login = () => {
 
   if (isAuth) {
     return (
-      <div className="temp-div ">
+      <div className="temp-div home-div">
         <p>
           User already signed in.
           <br />
@@ -163,6 +167,7 @@ const Login = () => {
       </section>
     </main>
   )
+
   return content
   // }
 }
