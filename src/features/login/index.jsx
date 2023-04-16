@@ -1,14 +1,14 @@
 import { useState, useEffect } from 'react'
-import { getData } from '../auth/internalApiHandler'
+import { getData } from '../apiHandler/internalApiHandler'
 import { useSelector, useDispatch } from 'react-redux'
 import {
   logingPending,
   logingSuccess,
   logingError,
   logingRemember,
-} from '../auth/authSlice'
+} from '../provider/auth/authSlice'
 import { useNavigate } from 'react-router-dom'
-import { RefreshAuthState } from '../auth/RefreshAuthState'
+import { RefreshAuthState } from '../provider/auth/RefreshAuthState'
 import '../../utils/style/_login.scss'
 
 /**
@@ -77,19 +77,16 @@ const Login = () => {
     dispatch(logingPending())
     try {
       const isAuth = await getData(credientials, 'login')
-
       if (isRemember) {
         localStorage.setItem('token', isAuth.token)
       } else {
         localStorage.removeItem('token')
       }
-
       dispatch(logingSuccess(isAuth.token))
-
       navigate('/profile')
     } catch (error) {
       console.log(error)
-      dispatch(logingError(error.response.data.message))
+      dispatch(logingError('Error'))
     }
   }
 

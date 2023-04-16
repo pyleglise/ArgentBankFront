@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { logingOut, logingPending } from '../auth/authSlice'
-import { userPending, userQuit } from '../profile/userSlice'
+import { logingOut, logingPending } from '../provider/auth/authSlice'
+import { userPending, userQuit } from '../provider/profile/userSlice'
 import '../../utils/style/_global.scss'
 
 const Logout = () => {

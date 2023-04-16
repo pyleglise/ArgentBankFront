@@ -2,7 +2,6 @@
 import { Link } from 'react-router-dom'
 import '../../utils/style/_global.scss'
 const Unauthorized = () => {
-  // const { isLoggedIn } = useSelector((state) => state.auth)
   return (
     <div className="temp-div home-div">
       <p>User unauthorized</p>

@@ -1,4 +1,4 @@
-import { getData } from '../auth/internalApiHandler'
+import { getData } from '../../apiHandler/internalApiHandler'
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 import { userError, userFullName, userPending } from './userSlice'
 import { useEffect } from 'react'
@@ -21,9 +21,7 @@ export const GetUserInfos = async () => {
       localStorage.removeItem('lastName')
     }
     dispatch(userFullName(profile))
-    // return {}
   } catch (error) {
-    console.log(error)
     dispatch(userError(error.response.data.message))
   }
 }

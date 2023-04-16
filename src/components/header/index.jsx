@@ -3,8 +3,11 @@ import { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import logo from '../../assets/argentBankLogo.png'
 import '../../utils/style/_header.scss'
-import { userFirstName } from '../../features/profile/userSlice'
-import { logingOut, logingSuccess } from '../../features/auth/authSlice'
+import { userFirstName } from '../../features/provider/profile/userSlice'
+import {
+  logingOut,
+  logingSuccess,
+} from '../../features/provider/auth/authSlice'
 
 /**
  * Component that displays the header (logo and main top navbar menu)\
