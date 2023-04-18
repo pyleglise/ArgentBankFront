@@ -1,3 +1,12 @@
+/**
+ * @file
+ * File : userSlice.js\
+ * It is used by redux as a state management provider\
+ * Defines the user profile slices
+ *
+ * @author  Pierre-Yves Léglise <pleglise@pm.me>
+ * @name userSlice
+ */
 import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {

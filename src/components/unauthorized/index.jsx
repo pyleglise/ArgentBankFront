@@ -1,6 +1,21 @@
 // import {useSelector} from 'react-redux'
 import { Link } from 'react-router-dom'
 import '../../utils/style/_global.scss'
+
+/**
+ * Component that displays the "unauthorized" page"\
+ * No props
+ *
+ * @namespace
+ * @component
+ * @author  Pierre-Yves Léglise <pleglise@pm.me>
+ * @example
+ * return{
+ *  <Unauthorized />
+ * }
+ * @returns {JSX.Element}   A JSX.Element that displays the "unauthorized" page
+ *
+ */
 const Unauthorized = () => {
   return (
     <div className="temp-div home-div">

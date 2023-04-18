@@ -1,11 +1,26 @@
 import { useState } from 'react'
-import '../../utils/style/_userWelcome.scss'
 import { useDispatch, useSelector } from 'react-redux'
-import { userError, userPending } from '../provider/profile/userSlice'
-import { updateData } from '../apiHandler/internalApiHandler'
+import { userError, userPending } from '../profile/userSlice'
+import { updateData } from '../../utils/apiHandler/internalApiHandler'
+import '../../utils/style/_userWelcome.scss'
 
+/**
+ * Component/page that displays the header of the profile page.\
+ * This header contains the functionnality to edit user name.\
+ * It is called by th Profile component.
+ * No props
+ *
+ * @namespace
+ * @component
+ * @author  Pierre-Yves Léglise <pleglise@pm.me>
+ * @example
+ * return{
+ *  <UserWelcome />
+ * }
+ * @returns {JSX.Element}   A JSX.Element that displays the Home Page
+ *
+ */
 const UserWelcome = () => {
-  let content = ''
   const dispatch = useDispatch()
   const { isLoading, firstName, lastName } = useSelector((state) => state.user)
   const [editButton, setEditButton] = useState('')
@@ -38,7 +53,7 @@ const UserWelcome = () => {
     }
   }
 
-  content = isLoading ? (
+  return isLoading ? (
     <div className="temp-div ">
       <h1>Loading...</h1>
     </div>
@@ -94,6 +109,5 @@ const UserWelcome = () => {
       )}
     </>
   )
-  return content
 }
 export default UserWelcome

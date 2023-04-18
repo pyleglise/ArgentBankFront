@@ -1,8 +1,18 @@
 import '../../utils/style/_userAccounts.scss'
 
 /**
- * Component - User
- * @returns {React.ReactElement} JSX.Element - User component
+ * Component that displays the user accounts information.\
+ * No props
+ *
+ * @namespace
+ * @component
+ * @author  Pierre-Yves Léglise <pleglise@pm.me>
+ * @example
+ * return{
+ *  <UserAccounts />
+ * }
+ * @returns {JSX.Element}   A JSX.Element that displays the user accounts information
+ *
  */
 
 const UserAccounts = () => (

@@ -1,18 +1,18 @@
 import { useState, useEffect } from 'react'
-import { getData } from '../apiHandler/internalApiHandler'
+import { useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
+import { getData } from '../../utils/apiHandler/internalApiHandler'
 import {
   logingPending,
   logingSuccess,
   logingError,
   logingRemember,
-} from '../provider/auth/authSlice'
-import { useNavigate } from 'react-router-dom'
-import { RefreshAuthState } from '../provider/auth/RefreshAuthState'
+} from './authSlice'
+import { RefreshAuthState } from './RefreshAuthState'
 import '../../utils/style/_login.scss'
 
 /**
- * Component that displays the Login page\
+ * Component that displays the Login page and set the authorization.\
  * No props
  *
  * @namespace
@@ -34,24 +34,49 @@ const Login = () => {
     (state) => state.auth
   )
 
-  if (isAuth && isRemember && token !== localStorage.getItem('token')) {
-    RefreshAuthState()
-  }
-
   const initialValues = {
     email: 'email',
     password: '**********',
   }
 
-  const [credientials, setCredientials] = useState({
+  const [credentials, setCredientials] = useState({
     email: '',
     password: '',
   })
 
   const [count, setCount] = useState(3)
-  // const userRef = useRef()
+  if (isAuth && isRemember && token !== localStorage.getItem('token')) {
+    RefreshAuthState()
+  }
+  // Handelers
+  const handelChange = ({ currentTarget }) => {
+    const { value, name } = currentTarget
+    if (name) {
+      setCredientials({
+        ...credentials,
+        [name]: value,
+      })
+    }
+  }
 
-  // Handles the direct access thru URL
+  const handleLogin = async (e) => {
+    e.preventDefault()
+    // dispatch(getToken(credentials))
+    dispatch(logingPending())
+    try {
+      const isAuth = await getData(credentials, 'login', token)
+      isRemember
+        ? localStorage.setItem('token', isAuth.token)
+        : localStorage.removeItem('token')
+      dispatch(logingSuccess(isAuth.token))
+      navigate('/profile')
+    } catch (error) {
+      console.log(error.response.data.message)
+      dispatch(logingError(error.response.data.message))
+    }
+  }
+
+  // Handles the direct access thru URL for user already logged in
   useEffect(() => {
     if (isAuth) {
       const interval = setInterval(() => {
@@ -61,34 +86,6 @@ const Login = () => {
       return () => clearInterval(interval)
     }
   }, [isAuth, navigate, count])
-
-  function handelChange({ currentTarget }) {
-    const { value, name } = currentTarget
-    if (name) {
-      setCredientials({
-        ...credientials,
-        [name]: value,
-      })
-    }
-  }
-
-  const handleLogin = async (e) => {
-    e.preventDefault()
-    dispatch(logingPending())
-    try {
-      const isAuth = await getData(credientials, 'login')
-      if (isRemember) {
-        localStorage.setItem('token', isAuth.token)
-      } else {
-        localStorage.removeItem('token')
-      }
-      dispatch(logingSuccess(isAuth.token))
-      navigate('/profile')
-    } catch (error) {
-      console.log(error)
-      dispatch(logingError('Error'))
-    }
-  }
 
   if (isAuth) {
     return (
@@ -102,6 +99,7 @@ const Login = () => {
     )
   }
 
+  // Handles the standard profile page
   content = isLoading ? (
     <div className="temp-div ">
       <h1>Loading...</h1>

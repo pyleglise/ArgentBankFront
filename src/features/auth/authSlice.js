@@ -1,3 +1,12 @@
+/**
+ * @file
+ * File : authSlice.js\
+ * It is used by redux as a state management provider\
+ * Defines the authorization profile slices
+ *
+ * @author  Pierre-Yves Léglise <pleglise@pm.me>
+ * @name authSlice
+ */
 import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
@@ -35,6 +44,29 @@ const authSlice = createSlice({
     },
   },
 })
+
+// Actions
+
+// export const getAuthToken = (credentials) => async (dispatch) => {
+//   // const navigate = useNavigate()
+//   // const dispatch = useDispatch()
+//   const isRemember = useSelector((state) => state.auth.isRemember)
+
+//   try {
+//     await getData(credentials, 'login')
+//       .then((response) => dispatch(logingSuccess(response.token)))
+//       .then(
+//         isRemember
+//           ? (response) => localStorage.setItem('token', response.token)
+//           : localStorage.removeItem('token')
+//       )
+//     // .then(navigate('/profile'))
+//   } catch (error) {
+//     console.log(error)
+//     dispatch(logingError('Error'))
+//   }
+// }
+
 const { actions, reducer } = authSlice
 export const {
   logingPending,

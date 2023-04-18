@@ -1,11 +1,11 @@
-import '../../utils/style/_profile.scss'
 import { useSelector } from 'react-redux'
-import UserAccounts from '../../components/userAccounts'
-import UserWelcome from '../../features/userWelcome'
-import { GetUserInfos } from '../../features/provider/profile/GetUserInfos'
+import UserAccounts from '../../components/UserAccount'
+import UserWelcome from './UserWelcome'
+import { GetUserInfos } from './GetUserInfos'
+import '../../utils/style/_profile.scss'
 
 /**
- * Component that displays the Profile page\
+ * Component/page that displays the Profile page
  * No props
  *
  * @namespace

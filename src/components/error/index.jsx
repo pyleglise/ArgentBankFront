@@ -1,5 +1,5 @@
-import '../../utils/style/_error.scss'
 import { NavLink } from 'react-router-dom'
+import '../../utils/style/_error.scss'
 
 /**
  * Component that displays the 404 Not Found Error\

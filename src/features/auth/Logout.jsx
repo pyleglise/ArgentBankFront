@@ -1,10 +1,24 @@
 import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { logingOut, logingPending } from '../provider/auth/authSlice'
-import { userPending, userQuit } from '../provider/profile/userSlice'
+import { logingOut, logingPending } from './authSlice'
+import { userPending, userQuit } from '../profile/userSlice'
 import '../../utils/style/_global.scss'
 
+/**
+ * Component that displays the Logout page and remove the authorization infos from the state and the locastorage\
+ * No props
+ *
+ * @namespace
+ * @component
+ * @author  Pierre-Yves Léglise <pleglise@pm.me>
+ * @example
+ * return{
+ *  <Logout />
+ * }
+ * @returns {JSX.Element}   A JSX.Element that displays the Logout Page
+ *
+ */
 const Logout = () => {
   const [count, setCount] = useState(3)
   const navigate = useNavigate()

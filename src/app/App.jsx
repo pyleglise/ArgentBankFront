@@ -1,14 +1,23 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import Home from './pages/Home'
-import Login from './features/login'
-import Profile from './pages/Profile'
-import Error from './components/error'
-import Layout from './components/layout'
-import Header from './components/header'
-import Footer from './components/footer'
-import Logout from './features/logout'
-import Unauthorized from './components/unauthorized'
-import RequireAuth from './features/provider/auth//RequireAuth'
+import Layout from '../components/Layout'
+import Header from '../components/Header'
+import Footer from '../components/Footer'
+import RequireAuth from '../features/auth/RequireAuth'
+import Unauthorized from '../components/Unauthorized'
+import Error from '../components/Error'
+import Home from '../pages/Home'
+import Login from '../features/auth/Login'
+import Logout from '../features/auth/Logout'
+import Profile from '../features/profile/Profile'
+
+/**
+ * App's component to manage various routes
+ * and display corresponding pages components
+ *
+ * @author  Pierre-Yves Léglise <pleglise@pm.me>
+ * @name App
+ * @returns {JSX}
+ */
 
 function App() {
   return (
@@ -23,21 +32,13 @@ function App() {
           <Route path="/logout" element={<Logout />} />
 
           {/* Protected Routes */}
-          {/* <Route
-            path="/profile"
-            element={
-              <RequireAuth redirectTo="/login">
-                <Profile />
-              </RequireAuth>
-            }
-          /> */}
-
           <Route element={<RequireAuth />}>
             <Route path="/profile" element={<Profile />} />
           </Route>
 
-          {/* Fallback routes */}
+          {/* Forbiden Routes */}
           <Route path="/unauthorized" element={<Unauthorized />} />
+
           {/* All other url : Error Route */}
           <Route path="*" element={<Error />} />
         </Route>
