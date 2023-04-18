@@ -1,5 +1,8 @@
+import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
+import { userFirstName } from '../../features/profile/userSlice'
+import { logingOut, logingSuccess } from '../../features/auth/authSlice'
 import logo from '../../assets/argentBankLogo.png'
 import '../../utils/style/_header.scss'
 
@@ -17,7 +20,23 @@ import '../../utils/style/_header.scss'
  * @returns {JSX.Element}   A JSX element containing the Header (logo and main top navbar menu)
  */
 function Header() {
-  const { isLoggedIn } = useSelector((state) => state.auth)
+  const dispatch = useDispatch()
+  const isAuth = useSelector((state) => state.auth.isAuth)
+  const localStorageFirstName = localStorage.getItem('firstName')
+  const localStorageToken = localStorage.getItem('token')
+  useEffect(() => {
+    if (localStorageToken) {
+      const localStorageFirstName = localStorage.getItem('firstName')
+      if (localStorageFirstName) {
+        dispatch(userFirstName(localStorageFirstName))
+        dispatch(logingSuccess(localStorageToken))
+      }
+    } else dispatch(logingOut)
+  }, [dispatch, localStorageFirstName, localStorageToken])
+
+  const { firstName } = useSelector((state) => state.user)
+  // GetUserInfos()
+
   return (
     <header>
       <nav className="main-nav">
@@ -29,11 +48,17 @@ function Header() {
           />
           <h1 className="sr-only">Argent Bank</h1>
         </Link>
-        {isLoggedIn ? (
-          <Link className="main-nav-item" to="/logout">
-            <i class="fa fa-sign-out"></i>
-            Sign Out
-          </Link>
+        {isAuth ? (
+          <div>
+            <Link className="main-nav-item" to="/profile">
+              <i className="fa fa-user-circle"></i>
+              {' ' + firstName + ' '}
+            </Link>
+            <Link className="main-nav-item" to="/logout">
+              <i className="fa fa-sign-out"></i>
+              Sign Out
+            </Link>
+          </div>
         ) : (
           <Link className="main-nav-item" to="/login">
             <i className="fa fa-user-circle"></i>

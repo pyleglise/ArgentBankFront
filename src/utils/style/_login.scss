@@ -1,7 +1,5 @@
 @import 'colors';
-.bg-dark {
-  background-color: $background-dark;
-}
+@import 'common';
 .sign-in-button {
   display: block;
   width: 100%;
@@ -49,4 +47,9 @@
 .input-wrapper input {
   padding: 5px;
   font-size: 1.2rem;
+}
+.alert {
+  color: red;
+  font-weight: bolder;
+  margin-bottom: 10px;
 }

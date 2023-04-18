@@ -4,7 +4,7 @@ import iconMonney from '../../assets/icon-money.png'
 import iconSecurity from '../../assets/icon-security.png'
 
 /**
- * Component that displays the Home page\
+ * Component/page that displays the Home page\
  * No props
  *
  * @namespace
