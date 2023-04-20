@@ -18,7 +18,7 @@ import { RefreshAuthState } from './RefreshAuthState'
 const RequireAuth = () => {
   const location = useLocation()
   RefreshAuthState()
-  const isAuth = useSelector((state) => state.auth.isAuth)
+  const isAuth = useSelector(state => state.auth.isAuth)
 
   return isAuth ? (
     <Outlet />

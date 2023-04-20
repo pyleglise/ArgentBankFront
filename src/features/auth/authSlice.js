@@ -45,28 +45,6 @@ const authSlice = createSlice({
   },
 })
 
-// Actions
-
-// export const getAuthToken = (credentials) => async (dispatch) => {
-//   // const navigate = useNavigate()
-//   // const dispatch = useDispatch()
-//   const isRemember = useSelector((state) => state.auth.isRemember)
-
-//   try {
-//     await getData(credentials, 'login')
-//       .then((response) => dispatch(logingSuccess(response.token)))
-//       .then(
-//         isRemember
-//           ? (response) => localStorage.setItem('token', response.token)
-//           : localStorage.removeItem('token')
-//       )
-//     // .then(navigate('/profile'))
-//   } catch (error) {
-//     console.log(error)
-//     dispatch(logingError('Error'))
-//   }
-// }
-
 const { actions, reducer } = authSlice
 export const {
   logingPending,
@@ -76,3 +54,6 @@ export const {
   logingRemember,
 } = actions
 export default reducer
+
+export const selectCurrentIsAuth = (state) => state.auth.isAuth
+export const selectCurrentToken = (state) => state.auth.token

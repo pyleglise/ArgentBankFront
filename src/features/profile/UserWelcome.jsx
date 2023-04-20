@@ -7,7 +7,7 @@ import '../../utils/style/_userWelcome.scss'
 /**
  * Component/page that displays the header of the profile page.\
  * This header contains the functionnality to edit user name.\
- * It is called by th Profile component.
+ * It is called by the Profile component.
  * No props
  *
  * @namespace
@@ -22,32 +22,33 @@ import '../../utils/style/_userWelcome.scss'
  */
 const UserWelcome = () => {
   const dispatch = useDispatch()
-  const { isLoading, firstName, lastName } = useSelector((state) => state.user)
+  const { isLoading, firstName, lastName } = useSelector(state => state.user)
+  const { token } = useSelector(state => state.auth)
   const [editButton, setEditButton] = useState('')
   function editNameButton(e) {
     e.preventDefault()
-    setEditButton((current) => !current)
+    setEditButton(current => !current)
   }
 
   const [userFullName, setUserFullName] = useState({
     firstName: '',
-    lastName: '',
+    lastName: ''
   })
   const handelChange = ({ currentTarget }) => {
     const { value, name } = currentTarget
     setUserFullName({
       ...userFullName,
-      [name]: value,
+      [name]: value
     })
   }
 
-  const submitHandler = async (e) => {
+  const submitHandler = async e => {
     e.preventDefault()
     dispatch(userPending())
     try {
-      const newUser = await updateData(userFullName, '/profile')
+      const newUser = await updateData(userFullName, '/profile', token)
       dispatch(userFullName(newUser))
-      setEditButton((current) => !current)
+      setEditButton(current => !current)
     } catch (error) {
       dispatch(userError('Error !'))
     }
