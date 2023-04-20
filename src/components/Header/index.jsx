@@ -21,7 +21,7 @@ import '../../utils/style/_header.scss'
  */
 function Header() {
   const dispatch = useDispatch()
-  const isAuth = useSelector((state) => state.auth.isAuth)
+  const isAuth = useSelector(state => state.auth.isAuth)
   const localStorageFirstName = localStorage.getItem('firstName')
   const localStorageToken = localStorage.getItem('token')
   useEffect(() => {
@@ -34,7 +34,7 @@ function Header() {
     } else dispatch(logingOut)
   }, [dispatch, localStorageFirstName, localStorageToken])
 
-  const { firstName } = useSelector((state) => state.user)
+  const { firstName } = useSelector(state => state.user)
   // GetUserInfos()
 
   return (

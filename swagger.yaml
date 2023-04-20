@@ -8,20 +8,118 @@ info:
     { 'email': 'contact@axialdata.com', 'url': 'https://www.axialdata.com' }
 host: localhost:3001
 basePath: /api/v1
-tags:
-  - name: Transactions
-    description: All the user's transaction
-  - name: Transaction
-    description: One specific transaction
-  - name: Categories
-    description: All the transaction's categories
+
 schemes:
   - https
 paths:
+  /user/login:
+    post:
+      tags:
+        - User Module
+      summary: Login
+      description: API for Login
+      parameters:
+        - in: body
+          name: body
+          description: Login Payload
+          required: true
+          schema:
+            $ref: '#/definitions/Login'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Login Successfully
+          schema:
+            $ref: '#/definitions/LoginResponse'
+        '400':
+          description: Invalid Fields
+        '500':
+          description: Internal Server Error
+  /user/signup:
+    post:
+      tags:
+        - User Module
+      summary: Signup
+      description: API for Signup
+      parameters:
+        - in: body
+          name: body
+          description: Signup Payload
+          required: true
+          schema:
+            $ref: '#/definitions/User'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Signup Successfully
+          schema:
+            $ref: '#/definitions/ApiResponse'
+        '400':
+          description: Invalid Fields
+        '500':
+          description: Internal Server Error
+  /user/profile:
+    post:
+      security:
+        - Bearer: []
+      tags:
+        - User Module
+      summary: User Profile API
+      description: API for fetching a user profile
+      parameters:
+        - in: header
+          type: string
+          name: Authorization
+          description: Attach Bearer JWT token
+          required: true
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: User profile retrieved successully
+          schema:
+            $ref: '#/definitions/ApiResponse'
+        '400':
+          description: Invalid Fields
+        '500':
+          description: Internal Server Error
+    put:
+      security:
+        - Bearer: []
+      tags:
+        - User Module
+      summary: User Profile API
+      description: API for updating a user profile
+      parameters:
+        - in: header
+          type: string
+          name: Authorization
+          description: Attach Bearer JWT token
+          required: true
+        - in: body
+          name: body
+          description: Update user profile attributes
+          required: true
+          schema:
+            $ref: '#/definitions/UserProfile'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: User profile retrieved successully
+          schema:
+            $ref: '#/definitions/ApiResponse'
+        '400':
+          description: Invalid Fields
+        '500':
+          description: Internal Server Error
+
   /user/account/{accountId}:
     get:
       tags:
-        - Transactions
+        - Account Module
       summary: User's transactions for the current month
       description: Get user's current month transactions
       operationId: getTransactionsByAccountId
@@ -50,7 +148,7 @@ paths:
         '200':
           description: successful operation
           schema:
-            $ref: '#/definitions/ResponseTransactions'
+            $ref: '#/definitions/TransactionsResponse'
         '400':
           description: Invalid account ID supplied
         '404':
@@ -62,7 +160,7 @@ paths:
   /user/categories:
     get:
       tags:
-        - Categories
+        - Account Module
       summary: Transaction's categories
       description: Get the transaction's categories
       operationId: getCategoriesByTransactionId
@@ -80,7 +178,7 @@ paths:
         '200':
           description: successful operation
           schema:
-            $ref: '#/definitions/ResponseCategories'
+            $ref: '#/definitions/CategoriesResponse'
         '400':
           description: Invalid transaction Id supplied
         '404':
@@ -92,7 +190,7 @@ paths:
   /user/transaction/{transactionId}:
     get:
       tags:
-        - Transaction
+        - Account Module
       summary: Transaction details
       description: Get the chosen transaction's details
       operationId: getTransactionById
@@ -115,7 +213,7 @@ paths:
         '200':
           description: successful operation
           schema:
-            $ref: '#/definitions/ResponseDetails'
+            $ref: '#/definitions/DetailsResponse'
         '400':
           description: Invalid transaction Id supplied
         '404':
@@ -126,7 +224,7 @@ paths:
         - Bearer: []
     put:
       tags:
-        - Transaction
+        - Account Module
       summary: Update the current transaction
       description: Update the current transaction's category
       operationId: upDateTransactionById
@@ -155,7 +253,7 @@ paths:
         '200':
           description: successful operation
           schema:
-            $ref: '#/definitions/ResponseDetails'
+            $ref: '#/definitions/DetailsResponse'
         '400':
           description: Invalid transaction Id supplied
         '404':
@@ -164,13 +262,62 @@ paths:
           description: Internal Server Error
       security:
         - Bearer: []
+
 securityDefinitions:
   Bearer:
     type: apiKey
     name: Authorization
     in: header
 definitions:
-  ResponseTransactions:
+  User:
+    properties:
+      email:
+        type: string
+        description: user email
+      password:
+        type: string
+        description: user password
+      firstName:
+        type: string
+        description: user first name
+      lastName:
+        type: string
+        description: user last name
+  Login:
+    properties:
+      email:
+        type: string
+        description: user email
+      password:
+        type: string
+        description: user password
+  ApiResponse:
+    type: object
+    properties:
+      status:
+        type: integer
+      message:
+        type: string
+      body:
+        type: object
+        properties:
+          id:
+            type: string
+          email:
+            type: string
+  LoginResponse:
+    type: object
+    properties:
+      token:
+        type: string
+  UserProfile:
+    type: object
+    properties:
+      firstName:
+        type: string
+      lastName:
+        type: string
+  TransactionsResponse:
     type: object
     properties:
       status:
@@ -187,7 +334,7 @@ definitions:
           $ref: '#/definitions/Informations'
     xml:
       name: Transactions
-  ResponseDetails:
+  DetailsResponse:
     type: object
     properties:
       status:
@@ -197,12 +344,12 @@ definitions:
       message:
         type: string
         format: string
-        example: "success : transaction's detail fetched"
+        example: "success : transaction's details fetched"
       schema:
         $ref: '#/definitions/Details'
     xml:
       name: Details
-  ResponseCategories:
+  CategoriesResponse:
     type: object
     properties:
       status:
@@ -248,7 +395,7 @@ definitions:
   Categories:
     type: array
     items:
-      $ref: '#/definitions/Category'
+      $ref: '#/definitions/CategoryList'
     xml:
       name: Categories
   Details:
@@ -299,7 +446,7 @@ definitions:
         example: '2023-04-18'
     xml:
       name: TransactionsDate
-  Category:
+  CategoryList:
     type: string
     enum:
       - Leasure

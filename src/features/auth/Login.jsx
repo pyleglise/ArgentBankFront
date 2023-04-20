@@ -6,7 +6,7 @@ import {
   logingPending,
   logingSuccess,
   logingError,
-  logingRemember,
+  logingRemember
 } from './authSlice'
 import { RefreshAuthState } from './RefreshAuthState'
 import '../../utils/style/_login.scss'
@@ -31,17 +31,17 @@ const Login = () => {
   let content = ''
 
   const { isAuth, isLoading, error, isRemember, token } = useSelector(
-    (state) => state.auth
+    state => state.auth
   )
 
   const initialValues = {
     email: 'email',
-    password: '**********',
+    password: '**********'
   }
 
   const [credentials, setCredientials] = useState({
     email: '',
-    password: '',
+    password: ''
   })
 
   const [count, setCount] = useState(3)
@@ -54,12 +54,12 @@ const Login = () => {
     if (name) {
       setCredientials({
         ...credentials,
-        [name]: value,
+        [name]: value
       })
     }
   }
 
-  const handleLogin = async (e) => {
+  const handleLogin = async e => {
     e.preventDefault()
     // dispatch(getToken(credentials))
     dispatch(logingPending())
@@ -80,7 +80,7 @@ const Login = () => {
   useEffect(() => {
     if (isAuth) {
       const interval = setInterval(() => {
-        setCount((seconds) => seconds - 1)
+        setCount(seconds => seconds - 1)
       }, 1000)
       count === 0 && navigate('/profile')
       return () => clearInterval(interval)

@@ -22,7 +22,7 @@ const Profile = () => {
   GetUserInfos()
   let content = ''
 
-  const isLoading = useSelector((state) => state.user.isLoading)
+  const isLoading = useSelector(state => state.user.isLoading)
   content = isLoading ? (
     <div className="temp-div ">
       <h1>Loading...</h1>

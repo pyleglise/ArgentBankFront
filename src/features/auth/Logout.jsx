@@ -24,7 +24,7 @@ const Logout = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
-  const isAuth = useSelector((state) => state.auth.isAuth)
+  const isAuth = useSelector(state => state.auth.isAuth)
   // console.log('Logged in : ' + isAuth)
 
   const signOut = () => {
@@ -42,7 +42,7 @@ const Logout = () => {
   useEffect(() => {
     if (!isAuth) {
       const interval = setInterval(() => {
-        setCount((seconds) => seconds - 1)
+        setCount(seconds => seconds - 1)
       }, 1000)
       count === 0 && navigate('/')
       return () => clearInterval(interval)

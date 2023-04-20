@@ -1,3 +1,11 @@
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import { Provider } from 'react-redux'
+import store from './app/store'
+import './utils/style/_global.scss'
+
+import App from './app/App'
+
 /**
  * @file
  * File : index.jsx\
@@ -8,13 +16,6 @@
  * @name index
  */
 
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import { Provider } from 'react-redux'
-import store from './app/store'
-import './utils/style/_global.scss'
-
-import App from './app/App'
 const root = ReactDOM.createRoot(document.getElementById('root'))
 root.render(
   <Provider store={store}>
