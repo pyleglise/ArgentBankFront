@@ -39,7 +39,8 @@ Goals:
 
 ## Install and launch front-end
 
-- [ ] Clone repository :
-- [ ] `cd `
+- [ ] Clone repository : https://github.com/pyleglise/ArgentBankFront
+- [ ] `cd argentbank-front`
 - [ ] `npm install` to install dependencies
 - [ ] `npm run start` to launch application
+- [ ] `npm run custom-docs`to generate documentation in `docs` directory
