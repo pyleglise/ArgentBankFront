@@ -10,13 +10,13 @@ import { API_URL } from './internalAPIConfig'
  * @param {string} token The authorization token to put in the header of the request
  * @return No return
  */
-const setAuthorization = (token) => {
+const setHeaders = (token) => {
   const localToken = localStorage.getItem('token')
-  if (token || localToken)
-    axios.defaults.headers.common['Authorization'] = `Bearer ${
-      token ? token : localToken
-    }`
-  else delete axios.defaults.headers.common['Authorization']
+
+  axios.defaults.headers.common['Authorization'] = `Bearer ${
+    token || localToken || ''
+  }`
+  axios.defaults.headers.common['Content-Type'] = 'application/json'
 }
 
 /**
@@ -36,7 +36,14 @@ const setAuthorization = (token) => {
  * @returns {Promise<any>} Promise with user datas
  */
 export async function getData(credientials, apiFunction, token) {
-  setAuthorization(token)
+  setHeaders(token)
+  // try {
+  //   const response = await axios.post(API_URL + '/' + apiFunction, credientials)
+  //   return response.data.body
+  // } catch (error) {
+  //   return error
+  // }
+
   return new Promise(async (resolve, reject) => {
     try {
       const res = await axios.post(API_URL + '/' + apiFunction, credientials)
@@ -62,7 +69,8 @@ export async function getData(credientials, apiFunction, token) {
  * @returns {Promise<any>} Promise with user's new data updated
  */
 export async function updateData(userFullName, apiFunction, token) {
-  setAuthorization(token)
+  setHeaders(token)
+
   return new Promise(async (resolve, reject) => {
     try {
       const res = await axios.put(API_URL + '/' + apiFunction, userFullName)

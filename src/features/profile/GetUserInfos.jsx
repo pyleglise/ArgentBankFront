@@ -12,13 +12,13 @@
  */
 
 import { useEffect } from 'react'
-import { shallowEqual, useDispatch, useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { userError, userFullName, userPending } from './userSlice'
 import { getData } from '../../utils/apiHandler/internalApiHandler'
 
 export const GetUserInfos = async () => {
   const dispatch = useDispatch()
-  const { isRemember, token } = useSelector((state) => state.auth, shallowEqual)
+  const { isRemember, token } = useSelector((state) => state.auth)
 
   useEffect(() => {
     dispatch(userPending())

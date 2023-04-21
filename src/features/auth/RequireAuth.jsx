@@ -1,4 +1,3 @@
-import { useSelector } from 'react-redux'
 import { useLocation, Navigate, Outlet } from 'react-router-dom'
 import { RefreshAuthState } from './RefreshAuthState'
 
@@ -17,8 +16,7 @@ import { RefreshAuthState } from './RefreshAuthState'
  */
 const RequireAuth = () => {
   const location = useLocation()
-  RefreshAuthState()
-  const isAuth = useSelector(state => state.auth.isAuth)
+  const isAuth = RefreshAuthState()
 
   return isAuth ? (
     <Outlet />

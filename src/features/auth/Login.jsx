@@ -6,7 +6,7 @@ import {
   logingPending,
   logingSuccess,
   logingError,
-  logingRemember
+  logingRemember,
 } from './authSlice'
 import { RefreshAuthState } from './RefreshAuthState'
 import '../../utils/style/_login.scss'
@@ -29,19 +29,20 @@ const Login = () => {
   const dispatch = useDispatch()
   let navigate = useNavigate()
   let content = ''
+  let errMsg = ''
 
   const { isAuth, isLoading, error, isRemember, token } = useSelector(
-    state => state.auth
+    (state) => state.auth
   )
 
   const initialValues = {
     email: 'email',
-    password: '**********'
+    password: '**********',
   }
 
   const [credentials, setCredientials] = useState({
     email: '',
-    password: ''
+    password: '',
   })
 
   const [count, setCount] = useState(3)
@@ -54,25 +55,27 @@ const Login = () => {
     if (name) {
       setCredientials({
         ...credentials,
-        [name]: value
+        [name]: value,
       })
     }
   }
 
-  const handleLogin = async e => {
+  const handleLogin = async (e) => {
     e.preventDefault()
     // dispatch(getToken(credentials))
     dispatch(logingPending())
     try {
-      const isAuth = await getData(credentials, 'login', token)
+      const data = await getData(credentials, 'login', token)
       isRemember
-        ? localStorage.setItem('token', isAuth.token)
+        ? localStorage.setItem('token', data.token)
         : localStorage.removeItem('token')
-      dispatch(logingSuccess(isAuth.token))
+      dispatch(logingSuccess(data.token))
       navigate('/profile')
     } catch (error) {
-      console.log(error.response.data.message)
-      dispatch(logingError(error.response.data.message))
+      error.response
+        ? (errMsg = error.response.data.message)
+        : (errMsg = error.message)
+      dispatch(logingError(errMsg))
     }
   }
 
@@ -80,7 +83,7 @@ const Login = () => {
   useEffect(() => {
     if (isAuth) {
       const interval = setInterval(() => {
-        setCount(seconds => seconds - 1)
+        setCount((seconds) => seconds - 1)
       }, 1000)
       count === 0 && navigate('/profile')
       return () => clearInterval(interval)
