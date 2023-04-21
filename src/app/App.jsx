@@ -29,14 +29,14 @@ function App() {
           {/* Public Routes */}
           <Route index path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/logout" element={<Logout />} />
 
           {/* Protected Routes */}
           <Route element={<RequireAuth />}>
             <Route path="/profile" element={<Profile />} />
+            <Route path="/logout" element={<Logout />} />
           </Route>
 
-          {/* Forbiden Routes */}
+          {/* Fallback for protected Routes */}
           <Route path="/unauthorized" element={<Unauthorized />} />
 
           {/* All other url : Error Route */}
