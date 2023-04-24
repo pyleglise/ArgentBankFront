@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
-import { getData } from '../../utils/apiHandler/internalApiHandler'
+import { getData } from '../../app/apiHandler/internalApiHandler'
 import {
   logingPending,
   logingSuccess,
@@ -10,6 +10,7 @@ import {
 } from './authSlice'
 import { RefreshAuthState } from './RefreshAuthState'
 import '../../utils/style/_login.scss'
+import { useLoginMutation } from './authApiSlice'
 
 /**
  * Component that displays the Login page and set the authorization.\
@@ -28,10 +29,12 @@ import '../../utils/style/_login.scss'
 const Login = () => {
   const dispatch = useDispatch()
   let navigate = useNavigate()
+  // const [email, setUser] = useState('')
+  // const [password, setPwd] = useState('')
   let content = ''
-  let errMsg = ''
-
-  const { isAuth, isLoading, error, isRemember, token } = useSelector(
+  // let errMsg = ''
+  const [login, { isLoading }] = useLoginMutation()
+  const { isAuth, isLoading1, error, isRemember, token } = useSelector(
     (state) => state.auth
   )
 
@@ -47,8 +50,13 @@ const Login = () => {
 
   const [count, setCount] = useState(3)
   if (isAuth && isRemember && token !== localStorage.getItem('token')) {
-    RefreshAuthState()
+    // RefreshAuthState()
   }
+
+  useEffect(() => {
+    dispatch(logingError(''))
+  }, [dispatch, credentials])
+
   // Handelers
   const handelChange = ({ currentTarget }) => {
     const { value, name } = currentTarget
@@ -63,20 +71,38 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault()
     // dispatch(getToken(credentials))
-    dispatch(logingPending())
     try {
-      const data = await getData(credentials, 'login', token)
-      isRemember
-        ? localStorage.setItem('token', data.token)
-        : localStorage.removeItem('token')
-      dispatch(logingSuccess(data.token))
+      console.log('credentials :')
+      console.log(credentials)
+      const userData = await login(credentials).unwrap()
+      console.log('userData :')
+      console.log(userData)
+      // dispatch(logingSuccess({ ...userData }))
+      // setUser('')
+      // setPwd('')
       navigate('/profile')
     } catch (error) {
-      error.response
-        ? (errMsg = error.response.data.message)
-        : (errMsg = error.message)
-      dispatch(logingError(errMsg))
+      console.log(error)
+      // error.response
+      //   ? (errMsg = error.response.data.message)
+      //   : (errMsg = error.message)
+      dispatch(logingError(error))
     }
+
+    // dispatch(logingPending())
+    // try {
+    //   const data = await getData(credentials, 'login', token)
+    //   isRemember
+    //     ? localStorage.setItem('token', data.token)
+    //     : localStorage.removeItem('token')
+    //   dispatch(logingSuccess(data.token))
+    //   navigate('/profile')
+    // } catch (error) {
+    //   error.response
+    //     ? (errMsg = error.response.data.message)
+    //     : (errMsg = error.message)
+    //   dispatch(logingError(errMsg))
+    // }
   }
 
   // Handles the direct access thru URL for user already logged in

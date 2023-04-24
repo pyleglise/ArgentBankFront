@@ -14,7 +14,7 @@
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { userError, userFullName, userPending } from './userSlice'
-import { getData } from '../../utils/apiHandler/internalApiHandler'
+import { getData } from '../../app/apiHandler/internalApiHandler'
 
 export const GetUserInfos = async () => {
   const dispatch = useDispatch()

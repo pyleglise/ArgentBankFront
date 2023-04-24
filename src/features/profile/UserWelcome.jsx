@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { userError, userPending } from '../profile/userSlice'
-import { updateData } from '../../utils/apiHandler/internalApiHandler'
+import { updateData } from '../../app/apiHandler/internalApiHandler'
 import '../../utils/style/_userWelcome.scss'
 
 /**
@@ -22,33 +22,33 @@ import '../../utils/style/_userWelcome.scss'
  */
 const UserWelcome = () => {
   const dispatch = useDispatch()
-  const { isLoading, firstName, lastName } = useSelector(state => state.user)
-  const { token } = useSelector(state => state.auth)
+  const { isLoading, firstName, lastName } = useSelector((state) => state.user)
+  const { token } = useSelector((state) => state.auth)
   const [editButton, setEditButton] = useState('')
   function editNameButton(e) {
     e.preventDefault()
-    setEditButton(current => !current)
+    setEditButton((current) => !current)
   }
 
   const [userFullName, setUserFullName] = useState({
     firstName: '',
-    lastName: ''
+    lastName: '',
   })
   const handelChange = ({ currentTarget }) => {
     const { value, name } = currentTarget
     setUserFullName({
       ...userFullName,
-      [name]: value
+      [name]: value,
     })
   }
 
-  const submitHandler = async e => {
+  const submitHandler = async (e) => {
     e.preventDefault()
     dispatch(userPending())
     try {
       const newUser = await updateData(userFullName, '/profile', token)
       dispatch(userFullName(newUser))
-      setEditButton(current => !current)
+      setEditButton((current) => !current)
     } catch (error) {
       dispatch(userError('Error !'))
     }
