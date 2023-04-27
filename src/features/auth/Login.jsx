@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
-import { getData } from '../../app/apiHandler/internalApiHandler'
+import { useLoginMutation } from './authApiSlice'
 import {
   logingPending,
   logingSuccess,
@@ -10,7 +10,6 @@ import {
 } from './authSlice'
 import { RefreshAuthState } from './RefreshAuthState'
 import '../../utils/style/_login.scss'
-import { useLoginMutation } from './authApiSlice'
 
 /**
  * Component that displays the Login page and set the authorization.\
@@ -29,19 +28,11 @@ import { useLoginMutation } from './authApiSlice'
 const Login = () => {
   const dispatch = useDispatch()
   let navigate = useNavigate()
-  // const [email, setUser] = useState('')
-  // const [password, setPwd] = useState('')
   let content = ''
-  // let errMsg = ''
-  const [login, { isLoading }] = useLoginMutation()
-  const { isAuth, isLoading1, error, isRemember, token } = useSelector(
+  const [login] = useLoginMutation()
+  const { isAuth, isLoading, error, isRemember, token } = useSelector(
     (state) => state.auth
   )
-
-  const initialValues = {
-    email: 'email',
-    password: '**********',
-  }
 
   const [credentials, setCredientials] = useState({
     email: '',
@@ -50,15 +41,16 @@ const Login = () => {
 
   const [count, setCount] = useState(3)
   if (isAuth && isRemember && token !== localStorage.getItem('token')) {
-    // RefreshAuthState()
+    RefreshAuthState()
   }
 
+  // Clear error message if new user input
   useEffect(() => {
     dispatch(logingError(''))
   }, [dispatch, credentials])
 
-  // Handelers
-  const handelChange = ({ currentTarget }) => {
+  // Handles user input
+  const handleChange = ({ currentTarget }) => {
     const { value, name } = currentTarget
     if (name) {
       setCredientials({
@@ -70,39 +62,19 @@ const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault()
-    // dispatch(getToken(credentials))
+    dispatch(logingPending())
     try {
-      console.log('credentials :')
-      console.log(credentials)
       const userData = await login(credentials).unwrap()
-      console.log('userData :')
-      console.log(userData)
-      // dispatch(logingSuccess({ ...userData }))
-      // setUser('')
-      // setPwd('')
+      dispatch(logingSuccess(userData.body.token))
+      isRemember
+        ? localStorage.setItem('token', userData.body.token)
+        : localStorage.removeItem('token')
       navigate('/profile')
     } catch (error) {
-      console.log(error)
-      // error.response
-      //   ? (errMsg = error.response.data.message)
-      //   : (errMsg = error.message)
-      dispatch(logingError(error))
+      console.log('Login error:')
+      console.log(error.data.message)
+      dispatch(logingError(error.data.message))
     }
-
-    // dispatch(logingPending())
-    // try {
-    //   const data = await getData(credentials, 'login', token)
-    //   isRemember
-    //     ? localStorage.setItem('token', data.token)
-    //     : localStorage.removeItem('token')
-    //   dispatch(logingSuccess(data.token))
-    //   navigate('/profile')
-    // } catch (error) {
-    //   error.response
-    //     ? (errMsg = error.response.data.message)
-    //     : (errMsg = error.message)
-    //   dispatch(logingError(errMsg))
-    // }
   }
 
   // Handles the direct access thru URL for user already logged in
@@ -150,12 +122,12 @@ const Login = () => {
           <div className="input-wrapper">
             <label htmlFor="email">Email</label>
             <input
-              type="text"
-              placeholder={initialValues.email}
+              type="email"
+              placeholder="email@somedomain.ext"
               id="email"
               name="email"
-              onChange={handelChange}
-              autoComplete="off"
+              onChange={handleChange}
+              autoComplete="false"
               required
             />
           </div>
@@ -163,11 +135,11 @@ const Login = () => {
             <label htmlFor="password">Password</label>
             <input
               type="password"
-              placeholder={initialValues.password}
+              placeholder="***********"
               id="password"
               name="password"
-              onChange={handelChange}
-              autoComplete="off"
+              onChange={handleChange}
+              autoComplete="false"
               required
             />
           </div>
@@ -193,6 +165,5 @@ const Login = () => {
   )
 
   return content
-  // }
 }
 export default Login

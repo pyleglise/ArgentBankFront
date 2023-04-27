@@ -1,27 +1,41 @@
+/**
+ * @file
+ * File : apiSlice.js\
+ * It is used by RTK Query \
+ * Defines Base query using axios instance
+ *
+ * @author  Pierre-Yves Léglise <pleglise@pm.me>
+ * @name apiSlice
+ */
 import { createApi } from '@reduxjs/toolkit/query/react'
 import axios from './axios'
-// import { logingSuccess, logingOut } from '../../features/auth/authSlice'
 
 const axiosBaseQuery =
-  ({ baseUrl } = { baseUrl: '' }) =>
-  async ({ url, method, data, params }) => {
-    console.log(' axiosBaseQuery')
+  () =>
+  async ({ url, method, data, params, headers, withCredentials }) => {
     try {
-      const result = await axios({ url: baseUrl + url, method, data, params })
-      console.log('Result : ')
-      console.log(result)
+      const result = await axios({
+        url: url,
+        method,
+        data,
+        params,
+        headers,
+        withCredentials,
+      })
+
       return { data: result.data }
     } catch (axiosError) {
       let err = axiosError
-      return err
-      // error: {
-      //   status: err.response?.status,
-      //   data: err.response?.data || err.message,
-      // },
+      return {
+        error: {
+          status: err.response?.status,
+          data: err.response?.data || err,
+        },
+      }
     }
   }
 
 export const apiSlice = createApi({
-  baseQuery: axiosBaseQuery,
+  baseQuery: axiosBaseQuery(),
   endpoints: (builder) => ({}),
 })

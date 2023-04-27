@@ -1,10 +1,11 @@
-import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { useSelector, useDispatch } from 'react-redux'
-import { userFirstName } from '../../features/profile/userSlice'
-import { logingOut, logingSuccess } from '../../features/auth/authSlice'
+import { useSelector } from 'react-redux'
+import { selectUserFirstName } from '../../features/profile/userSlice'
+import { selectCurrentToken } from '../../features/auth/authSlice'
 import logo from '../../assets/argentBankLogo.png'
 import '../../utils/style/_header.scss'
+// import { useEffect } from 'react'
+import { RefreshAuthState } from '../../features/auth/RefreshAuthState'
 
 /**
  * Component that displays the header (logo and main top navbar menu)\
@@ -19,40 +20,27 @@ import '../../utils/style/_header.scss'
  * }
  * @returns {JSX.Element}   A JSX element containing the Header (logo and main top navbar menu)
  */
-function Header() {
-  const dispatch = useDispatch()
-  const isAuth = useSelector(state => state.auth.isAuth)
-  const localStorageFirstName = localStorage.getItem('firstName')
-  const localStorageToken = localStorage.getItem('token')
-  useEffect(() => {
-    if (localStorageToken) {
-      const localStorageFirstName = localStorage.getItem('firstName')
-      if (localStorageFirstName) {
-        dispatch(userFirstName(localStorageFirstName))
-        dispatch(logingSuccess(localStorageToken))
-      }
-    } else dispatch(logingOut)
-  }, [dispatch, localStorageFirstName, localStorageToken])
-
-  const { firstName } = useSelector(state => state.user)
-  // GetUserInfos()
+const Header = () => {
+  RefreshAuthState()
+  const stateToken = useSelector(selectCurrentToken)
+  const stateFirstName = useSelector(selectUserFirstName)
 
   return (
     <header>
       <nav className="main-nav">
         <Link className="main-nav-logo" to="/">
           <img
-            className="mmain-nav-logo-image"
+            className="main-nav-logo-image"
             src={logo}
             alt="ArgentBank Logo"
           />
           <h1 className="sr-only">Argent Bank</h1>
         </Link>
-        {isAuth ? (
+        {stateToken ? (
           <div>
             <Link className="main-nav-item" to="/profile">
               <i className="fa fa-user-circle"></i>
-              {' ' + firstName + ' '}
+              {' ' + stateFirstName + ' '}
             </Link>
             <Link className="main-nav-item" to="/logout">
               <i className="fa fa-sign-out"></i>

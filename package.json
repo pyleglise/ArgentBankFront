@@ -53,6 +53,7 @@
   "devDependencies": {
     "clean-jsdoc-theme": "^4.2.7",
     "jsdoc": "^4.0.2",
+    "jsdoc-babel": "^0.5.0",
     "sass": "^1.54.4"
   }
 }

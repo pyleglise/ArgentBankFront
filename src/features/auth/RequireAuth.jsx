@@ -1,5 +1,6 @@
 import { useLocation, Navigate, Outlet } from 'react-router-dom'
-import { RefreshAuthState } from './RefreshAuthState'
+import { useSelector } from 'react-redux'
+import { selectCurrentIsAuth } from './authSlice'
 
 /**
  * Component that controls the authorization status.\
@@ -16,7 +17,7 @@ import { RefreshAuthState } from './RefreshAuthState'
  */
 const RequireAuth = () => {
   const location = useLocation()
-  const isAuth = RefreshAuthState()
+  const isAuth = useSelector(selectCurrentIsAuth)
 
   return isAuth ? (
     <Outlet />
