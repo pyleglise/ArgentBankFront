@@ -1,7 +1,11 @@
-import { useSelector } from 'react-redux'
+import { useEffect } from 'react'
+import { NavLink } from 'react-router-dom'
+import { useSelector, useDispatch } from 'react-redux'
+import { selectCurrentToken } from '../auth/authSlice'
+import { userPending, userFullName } from './userSlice'
+import { useGetUserMutation } from './userApiSlice'
 import UserAccounts from '../../components/UserAccount'
 import UserWelcome from './UserWelcome'
-import { GetUserInfos } from './GetUserInfos'
 import '../../utils/style/_profile.scss'
 
 /**
@@ -19,20 +23,60 @@ import '../../utils/style/_profile.scss'
  *
  */
 const Profile = () => {
-  GetUserInfos()
+  const dispatch = useDispatch()
+  const token = useSelector(selectCurrentToken)
+  const isRemember = useSelector((state) => state.auth.isRemember)
+  const userIsLoading = useSelector((state) => state.user.isLoading)
+
+  const [getUser, { data, isLoading, isSuccess, isError, error }] =
+    useGetUserMutation()
+
+  useEffect(() => {
+    dispatch(userPending())
+    if (token) getUser(token).unwrap()
+  }, [dispatch, getUser, token])
+
+  useEffect(() => {
+    if (isSuccess) dispatch(userFullName(data.body))
+  }, [isSuccess, dispatch, data, userIsLoading])
+
   let content = ''
 
-  const isLoading = useSelector(state => state.user.isLoading)
-  content = isLoading ? (
-    <div className="temp-div ">
-      <h1>Loading...</h1>
-    </div>
-  ) : (
-    <main className="main bg-dark">
-      <UserWelcome />
-      <UserAccounts />
-    </main>
-  )
+  if (isLoading) {
+    content = (
+      <div className="temp-div ">
+        <h1>Loading...</h1>
+      </div>
+    )
+  } else if (isSuccess) {
+    if (isRemember) {
+      localStorage.setItem('firstName', data.body.firstName)
+      localStorage.setItem('lastName', data.body.lastName)
+    } else {
+      localStorage.removeItem('firstName')
+      localStorage.removeItem('lastName')
+    }
+
+    content = (
+      <main className="main bg-dark">
+        <UserWelcome />
+        <UserAccounts />
+      </main>
+    )
+  } else if (isError) {
+    content = (
+      <div className="error">
+        <p className="error-num">ERROR ! </p>
+        <p className="error-txt">
+          Oups!
+          <br /> {error.data.message}
+        </p>
+        <p>
+          <NavLink to="/">Back to home page</NavLink>
+        </p>
+      </div>
+    )
+  }
 
   return content
 }

@@ -1,5 +1,6 @@
-import { useDispatch } from 'react-redux'
-import { logingSuccess } from './authSlice'
+import { useDispatch, useSelector } from 'react-redux'
+import { logingPending, logingSuccess, selectCurrentToken } from './authSlice'
+import { userFirstName, userPending } from '../profile/userSlice'
 
 /**
  * Component that refresh the state.auth.token depending on the localstorage token status.\
@@ -10,15 +11,21 @@ import { logingSuccess } from './authSlice'
  * @author  Pierre-Yves Léglise <pleglise@pm.me>
  * @example
  *  RefreshAuthState()
- * @returns Nothing returned but the state.auth is updated.
+ * @returns {Boolean} Authorization status
  *
  */
 export const RefreshAuthState = () => {
   const dispatch = useDispatch()
-
-  const token = localStorage.getItem('token')
+  const localToken = localStorage.getItem('token')
+  const localStorageFirstName = localStorage.getItem('firstName')
+  const token = useSelector(selectCurrentToken)
   // keeps you logged in while refreshing
-  if (token) {
-    dispatch(logingSuccess(token))
+  if (localToken && !token) {
+    dispatch(logingPending())
+    dispatch(logingSuccess(localToken))
+    if (localStorageFirstName) {
+      dispatch(userPending())
+      dispatch(userFirstName(localStorageFirstName))
+    }
   }
 }

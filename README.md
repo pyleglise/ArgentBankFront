@@ -31,7 +31,7 @@ Goals:
 
 ## Install and launch back-end
 
-- [ ] Clone backend repository : https://github.com/OpenClassrooms-Student-Center/Project-10-Bank-API
+- [ ] Clone backend repository : [backend repository](https://github.com/OpenClassrooms-Student-Center/Project-10-Bank-API)
 - [ ] `cd Project-10-Bank-API`
 - [ ] `npm install` to install dependencies
 - [ ] `npm run dev:server` to start local dev server (port 3001)
@@ -39,8 +39,16 @@ Goals:
 
 ## Install and launch front-end
 
-- [ ] Clone repository : https://github.com/pyleglise/ArgentBankFront
+- [ ] Clone repository : [Frontend repository](https://github.com/pyleglise/ArgentBankFront)
 - [ ] `cd argentbank-front`
 - [ ] `npm install` to install dependencies
 - [ ] `npm run start` to launch application
 - [ ] `npm run custom-docs`to generate documentation in `docs` directory
+
+## View documentation
+
+Visit developper documentation : [Docs](http://pleglise.free.fr/P13/docs/)
+
+Visit Swagger api reference : [Api reference](http://pleglise.free.fr/P13/api-docs/)
+
+Visit developper gitHub project page :[gitHub project](https://github.com/pyleglise/ArgentBankFront)

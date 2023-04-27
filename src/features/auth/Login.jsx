@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
-import { getData } from '../../utils/apiHandler/internalApiHandler'
+import { useLoginMutation } from './authApiSlice'
 import {
   logingPending,
   logingSuccess,
   logingError,
-  logingRemember
+  logingRemember,
 } from './authSlice'
 import { RefreshAuthState } from './RefreshAuthState'
 import '../../utils/style/_login.scss'
@@ -29,50 +29,51 @@ const Login = () => {
   const dispatch = useDispatch()
   let navigate = useNavigate()
   let content = ''
-
+  const [login] = useLoginMutation()
   const { isAuth, isLoading, error, isRemember, token } = useSelector(
-    state => state.auth
+    (state) => state.auth
   )
-
-  const initialValues = {
-    email: 'email',
-    password: '**********'
-  }
 
   const [credentials, setCredientials] = useState({
     email: '',
-    password: ''
+    password: '',
   })
 
   const [count, setCount] = useState(3)
   if (isAuth && isRemember && token !== localStorage.getItem('token')) {
     RefreshAuthState()
   }
-  // Handelers
-  const handelChange = ({ currentTarget }) => {
+
+  // Clear error message if new user input
+  useEffect(() => {
+    dispatch(logingError(''))
+  }, [dispatch, credentials])
+
+  // Handles user input
+  const handleChange = ({ currentTarget }) => {
     const { value, name } = currentTarget
     if (name) {
       setCredientials({
         ...credentials,
-        [name]: value
+        [name]: value,
       })
     }
   }
 
-  const handleLogin = async e => {
+  const handleLogin = async (e) => {
     e.preventDefault()
-    // dispatch(getToken(credentials))
     dispatch(logingPending())
     try {
-      const isAuth = await getData(credentials, 'login', token)
+      const userData = await login(credentials).unwrap()
+      dispatch(logingSuccess(userData.body.token))
       isRemember
-        ? localStorage.setItem('token', isAuth.token)
+        ? localStorage.setItem('token', userData.body.token)
         : localStorage.removeItem('token')
-      dispatch(logingSuccess(isAuth.token))
       navigate('/profile')
     } catch (error) {
-      console.log(error.response.data.message)
-      dispatch(logingError(error.response.data.message))
+      console.log('Login error:')
+      console.log(error.data.message)
+      dispatch(logingError(error.data.message))
     }
   }
 
@@ -80,7 +81,7 @@ const Login = () => {
   useEffect(() => {
     if (isAuth) {
       const interval = setInterval(() => {
-        setCount(seconds => seconds - 1)
+        setCount((seconds) => seconds - 1)
       }, 1000)
       count === 0 && navigate('/profile')
       return () => clearInterval(interval)
@@ -121,12 +122,12 @@ const Login = () => {
           <div className="input-wrapper">
             <label htmlFor="email">Email</label>
             <input
-              type="text"
-              placeholder={initialValues.email}
+              type="email"
+              placeholder="email@somedomain.ext"
               id="email"
               name="email"
-              onChange={handelChange}
-              autoComplete="off"
+              onChange={handleChange}
+              autoComplete="false"
               required
             />
           </div>
@@ -134,11 +135,11 @@ const Login = () => {
             <label htmlFor="password">Password</label>
             <input
               type="password"
-              placeholder={initialValues.password}
+              placeholder="***********"
               id="password"
               name="password"
-              onChange={handelChange}
-              autoComplete="off"
+              onChange={handleChange}
+              autoComplete="false"
               required
             />
           </div>
@@ -164,6 +165,5 @@ const Login = () => {
   )
 
   return content
-  // }
 }
 export default Login

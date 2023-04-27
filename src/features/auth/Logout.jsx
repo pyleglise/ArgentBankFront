@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { logingOut, logingPending } from './authSlice'
+import { logingOut, logingPending, selectCurrentIsAuth } from './authSlice'
 import { userPending, userQuit } from '../profile/userSlice'
 import '../../utils/style/_global.scss'
 
@@ -23,9 +23,7 @@ const Logout = () => {
   const [count, setCount] = useState(3)
   const navigate = useNavigate()
   const dispatch = useDispatch()
-
-  const isAuth = useSelector(state => state.auth.isAuth)
-  // console.log('Logged in : ' + isAuth)
+  const isAuth = useSelector(selectCurrentIsAuth)
 
   const signOut = () => {
     if (isAuth) {
@@ -42,7 +40,7 @@ const Logout = () => {
   useEffect(() => {
     if (!isAuth) {
       const interval = setInterval(() => {
-        setCount(seconds => seconds - 1)
+        setCount((seconds) => seconds - 1)
       }, 1000)
       count === 0 && navigate('/')
       return () => clearInterval(interval)

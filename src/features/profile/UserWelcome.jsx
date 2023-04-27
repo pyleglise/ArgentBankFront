@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { userError, userPending } from '../profile/userSlice'
-import { updateData } from '../../utils/apiHandler/internalApiHandler'
+import { userError, userPending, userFullName } from './userSlice'
+import { useSetUserMutation } from './userApiSlice'
 import '../../utils/style/_userWelcome.scss'
 
 /**
@@ -22,35 +22,48 @@ import '../../utils/style/_userWelcome.scss'
  */
 const UserWelcome = () => {
   const dispatch = useDispatch()
-  const { isLoading, firstName, lastName } = useSelector(state => state.user)
-  const { token } = useSelector(state => state.auth)
+  const { isLoading, firstName, lastName } = useSelector((state) => state.user)
+  const { token, isRemember } = useSelector((state) => state.auth)
   const [editButton, setEditButton] = useState('')
-  function editNameButton(e) {
+  const [setUser] = useSetUserMutation()
+
+  const editNameButton = (e) => {
     e.preventDefault()
-    setEditButton(current => !current)
+    setEditButton((current) => !current)
   }
 
-  const [userFullName, setUserFullName] = useState({
+  const [userName, setUserFullName] = useState({
     firstName: '',
-    lastName: ''
+    lastName: '',
   })
   const handelChange = ({ currentTarget }) => {
     const { value, name } = currentTarget
     setUserFullName({
-      ...userFullName,
-      [name]: value
+      ...userName,
+      [name]: value,
     })
   }
 
-  const submitHandler = async e => {
+  const submitHandler = async (e) => {
     e.preventDefault()
     dispatch(userPending())
     try {
-      const newUser = await updateData(userFullName, '/profile', token)
-      dispatch(userFullName(newUser))
-      setEditButton(current => !current)
+      const userData = await setUser({
+        token: token,
+        userFullName: userName,
+      }).unwrap()
+      dispatch(userFullName(userData.body))
+      if (isRemember) {
+        localStorage.setItem('firstName', userData.body.firstName)
+        localStorage.setItem('lastName', userData.body.lastName)
+      } else {
+        localStorage.removeItem('firstName')
+        localStorage.removeItem('lastName')
+      }
+      setEditButton((current) => !current)
     } catch (error) {
-      dispatch(userError('Error !'))
+      console.log(error.data.message)
+      dispatch(userError(error.data.message))
     }
   }
 

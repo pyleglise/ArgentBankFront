@@ -21,10 +21,10 @@ const Error = () => {
       <p className="error-num">404</p>
       <p className="error-txt">
         Oups!
-        <br /> La page que vous demandez n'existe pas.
+        <br /> The requested page does not exist.
       </p>
       <p>
-        <NavLink to="/">Retournez sur la page d'accueil</NavLink>
+        <NavLink to="/">Back to home page</NavLink>
       </p>
     </div>
   )

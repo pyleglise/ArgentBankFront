@@ -61,3 +61,5 @@ export const {
   userQuit,
 } = actions
 export default reducer
+
+export const selectUserFirstName = (state) => state.user.firstName
