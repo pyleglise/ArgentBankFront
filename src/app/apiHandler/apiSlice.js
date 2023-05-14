@@ -12,7 +12,7 @@ import axios from './axios'
 
 const axiosBaseQuery =
   () =>
-  async ({ url, method, data, params, headers, withCredentials }) => {
+  async ({ url, method, data, params, headers }) => {
     try {
       const result = await axios({
         url: url,
@@ -20,7 +20,6 @@ const axiosBaseQuery =
         data,
         params,
         headers,
-        withCredentials,
       })
 
       return { data: result.data }

@@ -71,8 +71,6 @@ const Login = () => {
         : localStorage.removeItem('token')
       navigate('/profile')
     } catch (error) {
-      console.log('Login error:')
-      console.log(error.data.message)
       dispatch(logingError(error.data.message))
     }
   }

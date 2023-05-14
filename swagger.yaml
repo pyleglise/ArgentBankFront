@@ -416,8 +416,7 @@ definitions:
       notes:
         type: string
         description: transaction notes
-        example: >-
-          Out with the friends
+        example: Out with friends
     xml:
       name: Category
   EditableDetails:
@@ -426,9 +425,11 @@ definitions:
       category:
         type: string
         description: Transaction name
+        example: Leisure
       notes:
         type: string
         description: Transaction notes
+        example: Out with friends
     xml:
       name: TransactionDetails
   TransactionsDate:
