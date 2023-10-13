@@ -1,0 +1,459 @@
+swagger: '2.0'
+info:
+  description: Sample suggestion for Argent Bank API's transactions model. Check  my [Argent Bank Frontend repository](https://github.com/pyleglise/ArgentBankFront)
+  version: 1.0.0
+  title: Bank Argent API transaction documentation
+  termsOfService: http://swagger.io/terms/
+  contact:
+    { 'email': 'contact@axialdata.com', 'url': 'https://www.axialdata.com' }
+host: localhost:3001
+basePath: /api/v1
+
+schemes:
+  - https
+paths:
+  /user/login:
+    post:
+      tags:
+        - User Module
+      summary: Login
+      description: API for Login
+      parameters:
+        - in: body
+          name: body
+          description: Login Payload
+          required: true
+          schema:
+            $ref: '#/definitions/Login'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Login Successfully
+          schema:
+            $ref: '#/definitions/LoginResponse'
+        '400':
+          description: Invalid Fields
+        '500':
+          description: Internal Server Error
+  /user/signup:
+    post:
+      tags:
+        - User Module
+      summary: Signup
+      description: API for Signup
+      parameters:
+        - in: body
+          name: body
+          description: Signup Payload
+          required: true
+          schema:
+            $ref: '#/definitions/User'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Signup Successfully
+          schema:
+            $ref: '#/definitions/ApiResponse'
+        '400':
+          description: Invalid Fields
+        '500':
+          description: Internal Server Error
+  /user/profile:
+    post:
+      security:
+        - Bearer: []
+      tags:
+        - User Module
+      summary: User Profile API
+      description: API for fetching a user profile
+      parameters:
+        - in: header
+          type: string
+          name: Authorization
+          description: Attach Bearer JWT token
+          required: true
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: User profile retrieved successully
+          schema:
+            $ref: '#/definitions/ApiResponse'
+        '400':
+          description: Invalid Fields
+        '500':
+          description: Internal Server Error
+    put:
+      security:
+        - Bearer: []
+      tags:
+        - User Module
+      summary: User Profile API
+      description: API for updating a user profile
+      parameters:
+        - in: header
+          type: string
+          name: Authorization
+          description: Attach Bearer JWT token
+          required: true
+        - in: body
+          name: body
+          description: Update user profile attributes
+          required: true
+          schema:
+            $ref: '#/definitions/UserProfile'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: User profile retrieved successully
+          schema:
+            $ref: '#/definitions/ApiResponse'
+        '400':
+          description: Invalid Fields
+        '500':
+          description: Internal Server Error
+
+  /user/account/{accountId}:
+    get:
+      tags:
+        - Account Module
+      summary: User's transactions for the current month
+      description: Get user's current month transactions
+      operationId: getTransactionsByAccountId
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: Authorization Bearer JWT token
+          required: true
+          type: string
+        - name: accountId
+          in: path
+          description: Account ID
+          required: true
+          type: number
+        - name: Dates
+          in: body
+          description: Transaction's period to get
+          required: true
+          schema:
+            $ref: '#/definitions/TransactionsDate'
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/TransactionsResponse'
+        '400':
+          description: Invalid account ID supplied
+        '404':
+          description: Account not found
+        '500':
+          description: Internal Server Error
+      security:
+        - Bearer: []
+  /user/categories:
+    get:
+      tags:
+        - Account Module
+      summary: Transaction's categories
+      description: Get the transaction's categories
+      operationId: getCategoriesByTransactionId
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Autorization
+          in: header
+          description: Attach Bearer JWT token
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/CategoriesResponse'
+        '400':
+          description: Invalid transaction Id supplied
+        '404':
+          description: Category not found
+        '500':
+          description: Internal Server Error
+      security:
+        - Bearer: []
+  /user/transaction/{transactionId}:
+    get:
+      tags:
+        - Account Module
+      summary: Transaction details
+      description: Get the chosen transaction's details
+      operationId: getTransactionById
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: Authorization Bearer JWT token
+          required: true
+          type: string
+        - name: transactionId
+          in: path
+          description: Transaction ID
+          required: true
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/DetailsResponse'
+        '400':
+          description: Invalid transaction Id supplied
+        '404':
+          description: Transaction not found
+        '500':
+          description: Internal Server Error
+      security:
+        - Bearer: []
+    put:
+      tags:
+        - Account Module
+      summary: Update the current transaction
+      description: Update the current transaction's category
+      operationId: upDateTransactionById
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: Authorization
+          in: header
+          description: Authorization Bearer JWT token
+          required: true
+          type: string
+        - name: transactionId
+          in: path
+          description: Transaction ID
+          required: true
+          type: string
+        - name: Category
+          in: body
+          description: Update transaction's category
+          required: true
+          schema:
+            $ref: '#/definitions/EditableDetails'
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/DetailsResponse'
+        '400':
+          description: Invalid transaction Id supplied
+        '404':
+          description: Transaction not found
+        '500':
+          description: Internal Server Error
+      security:
+        - Bearer: []
+
+securityDefinitions:
+  Bearer:
+    type: apiKey
+    name: Authorization
+    in: header
+definitions:
+  User:
+    properties:
+      email:
+        type: string
+        description: user email
+      password:
+        type: string
+        description: user password
+      firstName:
+        type: string
+        description: user first name
+      lastName:
+        type: string
+        description: user last name
+  Login:
+    properties:
+      email:
+        type: string
+        description: user email
+      password:
+        type: string
+        description: user password
+  ApiResponse:
+    type: object
+    properties:
+      status:
+        type: integer
+      message:
+        type: string
+      body:
+        type: object
+        properties:
+          id:
+            type: string
+          email:
+            type: string
+  LoginResponse:
+    type: object
+    properties:
+      token:
+        type: string
+  UserProfile:
+    type: object
+    properties:
+      firstName:
+        type: string
+      lastName:
+        type: string
+  TransactionsResponse:
+    type: object
+    properties:
+      status:
+        type: integer
+        format: int64
+        example: 200
+      message:
+        type: string
+        format: string
+        example: 'success : transactions fetched'
+      body:
+        type: array
+        items:
+          $ref: '#/definitions/Informations'
+    xml:
+      name: Transactions
+  DetailsResponse:
+    type: object
+    properties:
+      status:
+        type: integer
+        format: int64
+        example: 200
+      message:
+        type: string
+        format: string
+        example: "success : transaction's details fetched"
+      schema:
+        $ref: '#/definitions/Details'
+    xml:
+      name: Details
+  CategoriesResponse:
+    type: object
+    properties:
+      status:
+        type: integer
+        format: int64
+        example: 200
+      message:
+        type: string
+        format: string
+        example: "success : transaction's category fetched"
+      schema:
+        $ref: '#/definitions/Categories'
+    xml:
+      name: Details
+  Informations:
+    type: object
+    properties:
+      transactionId:
+        type: string
+        description: Transaction ID
+        example: 95126657891626454894
+      date:
+        type: string
+        format: date-time
+        description: transaction date
+        example: '2023-02-18T08:24:56.234Z'
+      description:
+        type: string
+        description: transaction description
+        example: Golden Sun Bakery
+      amount:
+        type: integer
+        format: int64
+        description: transaction amount
+        example: 5
+      balance:
+        type: integer
+        format: int64
+        description: account balance after transaction
+        example: 2082.79
+    xml:
+      name: Transaction
+  Categories:
+    type: array
+    items:
+      $ref: '#/definitions/CategoryList'
+    xml:
+      name: Categories
+  Details:
+    type: object
+    properties:
+      transactionId:
+        type: string
+        description: Transaction ID
+        example: 95126657891626454894
+      type:
+        type: string
+        description: Transaction type
+        example: Restaurant
+      category:
+        type: string
+        description: transaction category
+        example: Leasure
+      notes:
+        type: string
+        description: transaction notes
+        example: >-
+          Out with the friends
+    xml:
+      name: Category
+  EditableDetails:
+    type: object
+    properties:
+      category:
+        type: string
+        description: Transaction name
+      notes:
+        type: string
+        description: Transaction notes
+    xml:
+      name: TransactionDetails
+  TransactionsDate:
+    type: object
+    properties:
+      from:
+        type: string
+        format: date
+        description: start date of period to get
+        example: '2023-03-18'
+      to:
+        type: string
+        format: date
+        description: end date of period to get
+        example: '2023-04-18'
+    xml:
+      name: TransactionsDate
+  CategoryList:
+    type: string
+    enum:
+      - Leasure
+      - Food
+      - Lodging
+      - Mobility
+      - Energy
+      - Supplies
+      - Holidays
+      - Other

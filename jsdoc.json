@@ -1,0 +1,52 @@
+{
+  "plugins": ["plugins/markdown", "node_modules/jsdoc-babel"],
+  "tags": {
+    "allowUnknownTags": true,
+    "dictionaries": ["jsdoc", "closure"]
+  },
+  "source": {
+    "include": ["src"],
+    "includePattern": ".js(doc|x)?$",
+    "excludePattern": "(node_modules/|docs)"
+  },
+
+  "templates": {
+    "cleverLinks": false,
+    "monospaceLinks": false
+  },
+
+  "opts": {
+    "destination": "docs",
+    "search": true,
+    "recurse": true,
+    "verbose": true,
+    "readme": "README.md",
+    "template": "node_modules/clean-jsdoc-theme",
+    "theme_opts": {
+      "default_theme": "light",
+      "title": "ArgentBank Documentation",
+      "homepageTitle": "ArgentBank documentation",
+      "footer": "Project 13 of OpenClassrooms path JavaScript React Developer - Pierre-Yves Léglise - 2023",
+      "static_dir": ["public/favicon.ico"],
+      "favicon": "public/favicon.ico",
+      "includeFilesListInHomepage": true,
+      "menu": [
+        {
+          "title": "API phase 2 Implementation",
+          "link": "../api-docs",
+          "target": "_blank"
+        },
+        {
+          "title": "Source",
+          "link": "https://github.com/pyleglise/ArgentBankFront",
+          "target": "_blank"
+        }
+      ]
+    },
+    "displayModuleHeader": true
+  },
+  "markdown": {
+    "hardwrap": false,
+    "idInHeadings": true
+  }
+}
